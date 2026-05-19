@@ -742,6 +742,11 @@ async function saveOrderToSupabase(){
   const neighborhood=getSelectedNeighborhoodName();
   const payment=getPaymentMethod();
   const amounts=getOrderAmounts();
+
+  const now=new Date();
+  const dataPedido=now.toLocaleDateString('pt-BR');
+  const horaPedido=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
   await supabaseInsert('orders',[{
     id:orderId,
     numero:orderNumber,
@@ -752,14 +757,20 @@ async function saveOrderToSupabase(){
     subtotal:amounts.subtotal,
     total:amounts.total,
     pagamento:normalizePaymentForOrder(payment),
-    status:'novo'
+    troco:null,
+    obs:'',
+    status:'novo',
+    data:dataPedido,
+    hora:horaPedido
   }]);
+
   const items=cart.map(i=>({
     order_id:orderId,
     name:`${i.name} (${i.size})`,
     qty:i.qty,
     price:Number(i.price)||0
   }));
+
   if(selectedBorda){
     items.push({
       order_id:orderId,
@@ -768,7 +779,11 @@ async function saveOrderToSupabase(){
       price:Number(selectedBorda.price)||0
     });
   }
-  await supabaseInsert('order_items',items);
+
+  if(items.length){
+    await supabaseInsert('order_items',items);
+  }
+
   return {id:orderId,numero:orderNumber};
 }
 
