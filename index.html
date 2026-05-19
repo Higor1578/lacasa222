@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#1a0a00;color:#fff2e6;min-height:100vh}
+.header{background:linear-gradient(135deg,#8b1a00,#c0392b);padding:24px 16px;text-align:center;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");background-size:40px}
+.logo-badge{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;background:#fff;border-radius:50%;margin-bottom:10px;box-shadow:0 4px 20px rgba(0,0,0,0.4);position:relative}
+.logo-badge svg{width:50px;height:50px}
+.header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.4);position:relative}
+.header p{font-size:12px;color:#ffcdb0;margin-top:4px;letter-spacing:2px;text-transform:uppercase;position:relative}
+.tabs{display:flex;background:#2d1200;border-bottom:2px solid #8b1a00;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:12px 18px;font-size:13px;font-weight:700;color:#c0856a;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all 0.2s;letter-spacing:0.5px}
+.tab.active{color:#ff6b3d;border-bottom-color:#ff6b3d}
+.content{padding:16px;max-width:720px;margin:0 auto}
+.section-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#ff6b3d;margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(255,107,61,0.3)}
+.sizes-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.size-btn{flex:1;min-width:70px;padding:8px 4px;background:#2d1200;border:1.5px solid #5a2400;border-radius:10px;cursor:pointer;text-align:center;transition:all 0.2s;color:#ffcdb0}
+.size-btn.selected{background:#8b1a00;border-color:#ff6b3d;color:#fff}
+.size-btn .sz-name{font-size:11px;font-weight:700;letter-spacing:1px}
+.size-btn .sz-slices{font-size:10px;color:#c0856a;margin:2px 0}
+.size-btn.selected .sz-slices{color:#ffcdb0}
+.size-btn .sz-price{font-size:14px;font-weight:700;color:#ff6b3d}
+.pizza-card{background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;transition:all 0.2s}
+.pizza-card:hover{border-color:#ff6b3d;background:#3d1a00}
+.pizza-info{min-width:0}
+.pizza-info .pizza-name{font-size:14px;font-weight:700;color:#fff2e6}
+.pizza-info .pizza-desc{font-size:11px;color:#a06040;margin-top:2px;line-height:1.4}
+.add-btn{width:32px;height:32px;background:#8b1a00;border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.add-btn:hover{background:#c0392b;transform:scale(1.1)}
+.add-btn.in-cart{background:#ff6b3d}
+.pizza-builder{background:#231000;border:1px solid #5a2400;border-radius:12px;padding:10px 12px;margin:0 0 12px;color:#ffcdb0}
+.builder-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:#c0856a;margin-bottom:8px}
+.builder-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.builder-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;background:#4a1500;border:1px solid #ff6b3d;border-radius:999px;color:#fff2e6;font-size:12px;font-weight:700;padding:6px 9px}
+.builder-chip button{background:transparent;border:none;color:#ffcdb0;font-size:14px;line-height:1;cursor:pointer}
+.builder-actions{display:flex;gap:8px}
+.builder-actions button{border:none;border-radius:10px;padding:9px 10px;font-size:12px;font-weight:800;cursor:pointer}
+.builder-add{flex:1;background:#ff6b3d;color:#fff}
+.builder-clear{background:#5a2400;color:#fff2e6}
+.builder-actions button:disabled{opacity:.45;cursor:not-allowed}
+.border-section{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.border-opt{background:#2d1200;border:1.5px solid #5a2400;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.2s}
+.border-opt:hover{border-color:#ff6b3d}
+.border-opt.selected{border-color:#ff6b3d;background:#3d1a00}
+.border-opt .b-name{font-size:12px;font-weight:700;color:#fff2e6}
+.border-opt .b-price{font-size:11px;color:#ff6b3d;margin-top:2px}
+.cart-panel{background:#2d1200;border-top:2px solid #5a2400;padding:10px 12px;position:sticky;bottom:0;max-height:38vh;overflow-y:auto}
+.cart-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#ff6b3d;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cart-badge{background:#ff6b3d;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cart-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #3d1a00;font-size:12px;gap:8px}
+.cart-item:last-child{border-bottom:none}
+.ci-name{color:#fff2e6;font-weight:600;flex:1;min-width:0}
+.ci-qty{display:flex;align-items:center;gap:6px;color:#c0856a}
+.ci-qty button{background:#5a2400;border:none;color:#fff;width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.ci-qty button:hover{background:#8b1a00}
+.ci-qty span{min-width:14px;text-align:center;font-weight:700;color:#fff}
+.ci-price{color:#ff6b3d;font-weight:700;margin-left:4px;white-space:nowrap}
+.delivery-row{margin-top:8px;display:flex;align-items:center;gap:8px;padding:7px;background:#1a0a00;border-radius:10px}
+.delivery-row label{font-size:13px;color:#c0856a;font-weight:600}
+.delivery-input{background:#2d1200;border:1.5px solid #5a2400;border-radius:8px;padding:6px 10px;color:#fff2e6;font-size:14px;font-family:'Nunito',sans-serif;width:90px;font-weight:700;min-width:0}
+.delivery-input:focus{outline:none;border-color:#ff6b3d}
+.total-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:2px solid #5a2400}
+.total-label{font-size:15px;font-weight:700;color:#c0856a}
+.total-value{font-family:'Playfair Display',serif;font-size:23px;font-weight:900;color:#ff6b3d}
+.checkout-btn{width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,#c0392b,#ff6b3d);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;letter-spacing:1px;transition:all 0.2s;box-shadow:0 4px 16px rgba(192,57,43,0.4)}
+.checkout-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,57,43,0.5)}
+.checkout-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.promo-banner{background:linear-gradient(135deg,#7b4a00,#c07800);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center}
+.store-status{background:#3b140c;border:1px solid #8b1a00;border-radius:12px;padding:10px 14px;margin-bottom:14px;color:#ffd0c0;font-size:13px;font-weight:700;display:none}
+.promo-icon{font-size:28px;flex-shrink:0}
+.promo-text p{font-size:12px;font-weight:700;color:#ffe0a0;letter-spacing:1px;text-transform:uppercase}
+.promo-text h3{font-size:15px;font-weight:900;color:#fff;line-height:1.2}
+.promo-text small{font-size:11px;color:#ffcf7a}
+.empty-cart{text-align:center;color:#5a2400;font-size:13px;padding:8px 0}
+.tab-content{display:none}
+.tab-content.active{display:block}
+@media (max-width:520px){
+  .delivery-input{font-size:13px}
+  #addr-street{width:42%!important}
+  #addr-number{width:22%!important}
+  #addr-neighborhood-search{width:32%!important}
+  .cart-panel{max-height:36vh}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-badge">
+    <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="25" cy="28" r="18" fill="#c0392b"/>
+      <circle cx="25" cy="28" r="15" fill="#e8c07a"/>
+      <circle cx="25" cy="28" r="11" fill="#e07a40"/>
+      <circle cx="20" cy="24" r="2.5" fill="#c0392b"/>
+      <circle cx="29" cy="26" r="2" fill="#c0392b"/>
+      <circle cx="23" cy="32" r="2" fill="#c0392b"/>
+      <polygon points="25,4 29,14 25,12 21,14" fill="#2d7a2d"/>
+      <rect x="23" y="10" width="4" height="8" rx="2" fill="#3a9a3a"/>
+    </svg>
+  </div>
+  <h1>La Casa da Pizza</h1>
+  <p>Forno a Lenha · Delivery</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" onclick="switchTab('tradicionais')">Tradicionais</div>
+  <div class="tab" onclick="switchTab('especiais')">Especiais</div>
+  <div class="tab" onclick="switchTab('doces')">Doces</div>
+  <div class="tab" onclick="switchTab('bordas')">Bordas</div>
+  <div class="tab" onclick="switchTab('pedido')">Pedido</div>
+</div>
+
+<div class="content">
+  <div class="promo-banner">
+    <div class="promo-icon">🍕</div>
+    <div class="promo-text">
+      <p>Promoção terça a quinta</p>
+      <h3>Pizza Grande R$ 45 · com Refri R$ 48</h3>
+      <small>Sabores tradicionais · Exceto feriados</small>
+    </div>
+  </div>
+  <div class="store-status" id="store-status"></div>
+
+  <div class="tab-content active" id="tab-tradicionais">
+    <div class="section-title">Tamanho</div>
+    <div class="sizes-row" id="sizes-trad">
+      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'trad','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$38</div></div>
+      <div class="size-btn" data-size="grande" onclick="selectSize(this,'trad','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$48</div></div>
+      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'trad','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$58</div></div>
+      <div class="size-btn" data-size="familia" onclick="selectSize(this,'trad','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$68</div></div>
+    </div>
+    <div class="section-title">Sabores</div>
+    <div class="pizza-builder" id="builder-trad"></div>
+    <div id="list-trad"></div>
+  </div>
+
+  <div class="tab-content" id="tab-especiais">
+    <div class="section-title">Tamanho</div>
+    <div class="sizes-row" id="sizes-esp">
+      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'esp','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$45</div></div>
+      <div class="size-btn" data-size="grande" onclick="selectSize(this,'esp','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$58</div></div>
+      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'esp','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$65</div></div>
+      <div class="size-btn" data-size="familia" onclick="selectSize(this,'esp','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$78</div></div>
+    </div>
+    <div class="section-title">Sabores</div>
+    <div class="pizza-builder" id="builder-esp"></div>
+    <div id="list-esp"></div>
+  </div>
+
+  <div class="tab-content" id="tab-doces">
+    <div class="section-title">Tamanho</div>
+    <div class="sizes-row" id="sizes-doce">
+      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'doce','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$38</div></div>
+      <div class="size-btn" data-size="grande" onclick="selectSize(this,'doce','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$48</div></div>
+      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'doce','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$58</div></div>
+      <div class="size-btn" data-size="familia" onclick="selectSize(this,'doce','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$68</div></div>
+    </div>
+    <div class="section-title">Sabores Doces</div>
+    <div class="pizza-builder" id="builder-doce"></div>
+    <div id="list-doce"></div>
+  </div>
+
+  <div id="bebidas-area" style="display:none;margin-top:18px;">
+    <div class="section-title">Bebidas para acompanhar</div>
+    <div style="font-size:13px;color:#7a4030;margin-bottom:10px">Escolha uma bebida para completar seu pedido de pizza.</div>
+    <div id="list-bebidas-suggest"></div>
+  </div>
+
+  <div class="tab-content" id="tab-bordas">
+    <div class="section-title">Escolha a borda recheada</div>
+    <div class="border-section" id="bordas-grid"></div>
+    <p style="font-size:12px;color:#7a4030;text-align:center;margin-top:8px">Bordas têm custo adicional de R$5,00</p>
+  </div>
+
+  <div class="tab-content" id="tab-pedido">
+    <div id="cart-summary"></div>
+  </div>
+</div>
+
+<div class="cart-panel">
+  <div class="cart-title">
+    Meu Pedido <div class="cart-badge" id="cart-count">0</div>
+  </div>
+  <div id="cart-items-mini"></div>
+  <div class="delivery-row" style="flex-wrap:wrap;gap:8px">
+    <label style="flex-basis:100%">Cliente:</label>
+    <input class="delivery-input" type="text" placeholder="Nome do cliente" id="customer-name" oninput="updateTotals()" style="width:100%">
+  </div>
+  <div class="delivery-row" id="address-row" style="flex-wrap:wrap;gap:8px">
+    <label style="flex-basis:100%">Endereço:</label>
+    <input class="delivery-input" type="text" placeholder="Rua" id="addr-street" oninput="updateTotals()" style="width:45%">
+    <input class="delivery-input" type="text" placeholder="Número" id="addr-number" oninput="updateTotals()" style="width:20%">
+    <input class="delivery-input" type="text" placeholder="Digite o bairro" id="addr-neighborhood-search" list="neighborhood-options" oninput="onNeighborhoodInput()" style="width:30%">
+    <datalist id="neighborhood-options"></datalist>
+    <input type="hidden" id="addr-neighborhood" value="">
+    <div id="addr-error" style="color:#ffb0a0;font-size:13px;margin-top:6px;display:none">Preencha nome, rua, número e bairro para entrega.</div>
+  </div>
+  <div class="delivery-row" style="margin-top:8px;align-items:center">
+    <label>Taxa de entrega:</label>
+    <div style="display:flex;align-items:center;gap:4px"><span style="color:#ff6b3d;font-weight:700">R$</span>
+    <input class="delivery-input" type="number" min="0" step="0.5" placeholder="0,00" id="delivery-fee" readonly></div>
+  </div>
+  <div class="delivery-row" style="margin-top:8px;align-items:center">
+    <label>Borda recheada:</label>
+    <select class="delivery-input" id="addr-borda" onchange="selectBordaByIndex(this.value)" style="width:60%">
+      <option value="">Sem borda</option>
+    </select>
+  </div>
+  <div class="delivery-row" style="margin-top:8px;align-items:center">
+    <label>Forma de pagamento:</label>
+    <select class="delivery-input" id="payment-method" onchange="updateTotals()" style="width:60%">
+      <option value="">Selecione</option>
+      <option value="Dinheiro">Dinheiro</option>
+      <option value="Cartão no entregador">Cartão no entregador</option>
+      <option value="PIX">PIX</option>
+    </select>
+  </div>
+  <div class="total-row">
+    <span class="total-label">Total</span>
+    <span class="total-value" id="total-display">R$ 0,00</span>
+  </div>
+  <button class="checkout-btn" id="checkout-btn" onclick="sendToWhatsapp()" disabled>Finalizar Pedido</button>
+</div>
+
+<script>
+const PIZZAS_TRAD=[
+  {name:'Calabresa',desc:'Mussarela e Calabresa'},
+  {name:'Humita',desc:'Mussarela e Milho'},
+  {name:'Mista',desc:'Mussarela, Apresentado e Calabresa'},
+  {name:'Napolitana',desc:'Mussarela, Tomate e Parmesão'},
+  {name:'Portuguesa',desc:'Mussarela, Apresentado, Ovo, Pimentão, Cebola e Azeitona'},
+  {name:'Apresentado',desc:'Mussarela e Apresentado'},
+  {name:'Italiana',desc:'Mussarela, Apresentado, Milho e Requeijão tipo Catupiry'},
+  {name:'Mussarela',desc:'Mussarela'},
+  {name:'Montes Claros',desc:'Mussarela, Apresentado, Milho, Cebola, Pimentão e Tomate'},
+  {name:'A Moda',desc:'Mussarela, Calabresa, Apresentado, Cebola, Pimentão e Tomate'},
+  {name:'Marguerita',desc:'Mussarela, Tomate e Manjericão seco'},
+  {name:'Calabresa à Francesa',desc:'Mussarela, Calabresa e Creme de Leite'}
+];
+const PIZZAS_ESP=[
+  {name:'Du Cheff',desc:'Mussarela, Milho, Bacon, Calabresa, Cebola e Azeitona'},
+  {name:'Vegetariana',desc:'Mussarela, Palmito, Milho, Tomate, Ervilha e Azeitona'},
+  {name:'Atum',desc:'Mussarela e Atum'},
+  {name:'Bacon',desc:'Mussarela e Bacon'},
+  {name:'La Casa',desc:'Mussarela, Apresentado, Frango, Tomate, Cebola e Azeitona'},
+  {name:'Da Casa',desc:'Mussarela, Calabresa, Milho, Ervilha, Ovos e Tomate'},
+  {name:'Frango',desc:'Mussarela, Frango desfiado'},
+  {name:'Frango Catupiry',desc:'Mussarela, Frango e Requeijão tipo Catupiry'},
+  {name:'Frango com Milho',desc:'Mussarela, Frango desfiado e Milho'},
+  {name:'Carijó',desc:'Mussarela, Frango, Milho e Requeijão tipo catupiry'},
+  {name:'Caipira',desc:'Mussarela, Frango, Calabresa e Milho'},
+  {name:'Quatro Queijos',desc:'Mussarela, Requeijão tipo Catupiry, Parmesão e Provolone'},
+  {name:'Especial',desc:'Mussarela, Calabresa, Milho, Palmito, Frango, Bacon, Cebola e Pimentão'},
+  {name:'Florença',desc:'Mussarela, Frango, Bacon, Cheddar e Batata palha'},
+  {name:'Frango à Bolonhesa',desc:'Mussarela, Frango e Molho à bolonhesa'},
+  {name:'Lombo c/ Catupiry',desc:'Mussarela, Lombinho e Requeijão tipo catupiry'},
+  {name:'Carne de Sol',desc:'Mussarela, Carne de Sol e Cebola'},
+  {name:'Peito de Peru à Francesa',desc:'Mussarela, Peito de Peru e Creme de leite'},
+  {name:'Palmito à Bolonhesa',desc:'Mussarela, Palmito e Molho à Bolonhesa'},
+  {name:'Palmito',desc:'Mussarela, Palmito'},
+  {name:'Lombo Prime',desc:'Mussarela, Lombinho, Cheddar e Bacon'}
+];
+const PIZZAS_DOCE=[
+  {name:'Banana',desc:'Mussarela, Leite condensado, Banana e Canela'},
+  {name:'Romeu e Julieta',desc:'Mussarela e Goiabada'},
+  {name:'Prestígio',desc:'Mussarela, Prestígio e Chocolate'},
+  {name:'Brigadeiro',desc:'Mussarela, Chocolate e Granulado'}
+];
+const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
+const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
+const SUPABASE_HEADERS={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
+
+let BEBIDAS=[];
+const BORDAS=[{name:'Catupiry',price:5},{name:'Cheddar',price:5},{name:'Brigadeiro',price:5}];
+let NEIGHBORHOODS=[];
+const PRICES_KEY='pizzaria_prices';
+const PRICES_DEFAULT={
+  trad:{media:38,grande:48,gigante:58,familia:68},
+  esp:{media:45,grande:58,gigante:65,familia:78},
+  doce:{media:38,grande:48,gigante:58,familia:68}
+};
+let PRICES=JSON.parse(JSON.stringify(PRICES_DEFAULT));
+let cart=[];
+let selectedBorda=null;
+let storeSettings={manual_closed:false,closed_days:[]};
+let pizzaSelections={trad:[],esp:[],doce:[]};
+let sizes={
+  trad:{k:'media',price:PRICES.trad.media,name:'Média',slices:'4 fatias'},
+  esp:{k:'media',price:PRICES.esp.media,name:'Média',slices:'4 fatias'},
+  doce:{k:'media',price:PRICES.doce.media,name:'Média',slices:'4 fatias'},
+  bebidas:{k:'unit',price:0,name:'Unidade',slices:''}
+};
+
+function escapeAttr(value){
+  return String(value).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function isPizzaCategory(cat){
+  return ['trad','esp','doce'].includes(cat);
+}
+
+function renderList(containerId,items,category){
+  const c=document.getElementById(containerId);
+  c.innerHTML='';
+  items.forEach(p=>{
+    const div=document.createElement('div');
+    div.className='pizza-card';
+    const variantId=p.variants?`variant-${category}-${p.name.replace(/\s+/g,'_').replace(/[^\w-]/g,'')}`:'';
+    const variantHtml=p.variants?`<div style="margin:10px 0"><select class="delivery-input" id="${variantId}" style="width:100%">${p.variants.map(v=>`<option value="${escapeAttr(v)}">${v}</option>`).join('')}</select></div>`:'';
+    const priceArg=category==='bebidas'?`,${Number(p.price)||0}`:'';
+    const variantArg=p.variants?`,document.getElementById('${variantId}').value`:'';
+    div.innerHTML=`<div class="pizza-info"><div class="pizza-name">${p.name}</div><div class="pizza-desc">${p.desc||''}</div>${variantHtml}</div><button class="add-btn" onclick="addToCart('${category}','${escapeAttr(p.name)}','${escapeAttr(p.desc||'')}',event${priceArg}${variantArg})" title="Adicionar">+</button>`;
+    c.appendChild(div);
+  });
+}
+
+function selectSize(btn,cat,key,price,name,slices){
+  document.querySelectorAll('#sizes-'+cat+' .size-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  let finalPrice=price;
+  if(finalPrice===null||finalPrice===undefined||isNaN(finalPrice)){
+    finalPrice=PRICES[cat]&&PRICES[cat][key]?Number(PRICES[cat][key]):0;
+  }
+  sizes[cat]={k:key,price:finalPrice,name,slices};
+  if(isPizzaCategory(cat)){
+    pizzaSelections[cat]=pizzaSelections[cat].slice(0,getMaxFlavors(cat));
+    renderPizzaBuilder(cat);
+  }
+}
+
+async function supabaseGet(table,query=''){
+  const response=await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`,{headers:SUPABASE_HEADERS});
+  if(!response.ok) throw new Error(`Supabase ${table}: ${response.status}`);
+  return response.json();
+}
+
+async function supabaseInsert(table,rows){
+  const response=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{
+    method:'POST',
+    headers:Object.assign({},SUPABASE_HEADERS,{Prefer:'return=representation'}),
+    body:JSON.stringify(rows)
+  });
+  if(!response.ok) throw new Error(`Supabase insert ${table}: ${response.status}`);
+  return response.json();
+}
+
+function parsePriceProductName(name){
+  const match=String(name||'').match(/^preco_(trad|esp|doce)_(media|grande|gigante|familia)$/);
+  return match?{category:match[1],size:match[2]}:null;
+}
+
+async function loadPrices(){
+  try{
+    const rows=await supabaseGet('products','?select=name,price,category,active&category=eq.Pizza%20Preco&active=eq.true');
+    if(Array.isArray(rows)&&rows.length){
+      const parsed=rows.reduce((acc,row)=>{
+        const key=parsePriceProductName(row.name);
+        if(!key) return acc;
+        if(!acc[key.category]) acc[key.category]={};
+        acc[key.category][key.size]=Number(row.price);
+        return acc;
+      },{});
+      PRICES={
+        trad:Object.assign({},PRICES_DEFAULT.trad,parsed.trad||{}),
+        esp:Object.assign({},PRICES_DEFAULT.esp,parsed.esp||{}),
+        doce:Object.assign({},PRICES_DEFAULT.doce,parsed.doce||{})
+      };
+      localStorage.setItem(PRICES_KEY,JSON.stringify(PRICES));
+      return;
+    }
+  }catch(e){}
+  try{
+    const raw=localStorage.getItem(PRICES_KEY);
+    PRICES=raw?{
+      trad:Object.assign({},PRICES_DEFAULT.trad,(JSON.parse(raw).trad)||{}),
+      esp:Object.assign({},PRICES_DEFAULT.esp,(JSON.parse(raw).esp)||{}),
+      doce:Object.assign({},PRICES_DEFAULT.doce,(JSON.parse(raw).doce)||{})
+    }:JSON.parse(JSON.stringify(PRICES_DEFAULT));
+  }catch(e){PRICES=JSON.parse(JSON.stringify(PRICES_DEFAULT));}
+}
+
+function syncSelectedSizes(){
+  ['trad','esp','doce'].forEach(cat=>{
+    const current=sizes[cat];
+    if(current&&PRICES[cat]&&PRICES[cat][current.k]) current.price=Number(PRICES[cat][current.k]);
+  });
+}
+
+async function loadStoreSettings(){
+  try{
+    const rows=await supabaseGet('store_settings','?select=key,value&key=eq.status');
+    if(Array.isArray(rows)&&rows.length&&rows[0].value){
+      storeSettings=Object.assign({manual_closed:false,closed_days:[]},rows[0].value);
+      return;
+    }
+  }catch(e){}
+  storeSettings={manual_closed:false,closed_days:[]};
+}
+
+function getStoreClosedReason(){
+  if(storeSettings.manual_closed) return 'Loja fechada no momento.';
+  const today=new Date().getDay();
+  const closedDays=Array.isArray(storeSettings.closed_days)?storeSettings.closed_days.map(Number):[];
+  if(closedDays.includes(today)) return 'Hoje não estamos funcionando.';
+  return '';
+}
+
+function isStoreOpen(){
+  return getStoreClosedReason()==='';
+}
+
+function renderStoreStatus(){
+  const el=document.getElementById('store-status');
+  const reason=getStoreClosedReason();
+  if(reason){
+    el.style.display='block';
+    el.textContent=reason+' Você ainda pode montar o pedido, mas o envio fica bloqueado.';
+  }else{
+    el.style.display='none';
+    el.textContent='';
+  }
+}
+
+function renderSizePrices(){
+  ['trad','esp','doce'].forEach(cat=>{
+    const row=document.getElementById('sizes-'+cat);
+    if(!row) return;
+    row.querySelectorAll('.size-btn').forEach(btn=>{
+      const key=btn.dataset.size;
+      const price=PRICES[cat]&&PRICES[cat][key]?PRICES[cat][key]:0;
+      const sp=btn.querySelector('.sz-price');
+      if(sp) sp.textContent='R$'+Number(price).toFixed(0).replace('.',',');
+    });
+  });
+}
+
+function getMaxFlavors(cat){
+  return sizes[cat]&&sizes[cat].k==='familia'?3:2;
+}
+
+function renderPizzaBuilder(cat){
+  const box=document.getElementById('builder-'+cat);
+  if(!box) return;
+  const max=getMaxFlavors(cat);
+  const selected=pizzaSelections[cat]||[];
+  const chips=selected.map((item,index)=>`<span class="builder-chip">${item.name}<button onclick="removePizzaFlavor('${cat}',${index})" title="Remover">x</button></span>`).join('');
+  const label=max===3?'Escolha até 3 sabores para a família':'Escolha 1 ou 2 sabores';
+  box.innerHTML=`
+    <div class="builder-top"><span>${label}</span><strong>${selected.length}/${max}</strong></div>
+    <div class="builder-chips">${chips || '<span style="font-size:12px;color:#7a4030">Toque no + do sabor para montar a pizza.</span>'}</div>
+    <div class="builder-actions">
+      <button class="builder-add" onclick="addSelectedPizza('${cat}')" ${selected.length?'':'disabled'}>Adicionar pizza</button>
+      <button class="builder-clear" onclick="clearPizzaSelection('${cat}')" ${selected.length?'':'disabled'}>Limpar</button>
+    </div>`;
+}
+
+function renderAllPizzaBuilders(){
+  ['trad','esp','doce'].forEach(renderPizzaBuilder);
+}
+
+function selectPizzaFlavor(cat,name,desc,e){
+  if(e) e.stopPropagation();
+  const selected=pizzaSelections[cat]||[];
+  const max=getMaxFlavors(cat);
+  const exists=selected.some(item=>item.name===name);
+  if(exists) return;
+  if(selected.length>=max){
+    alert(`Este tamanho permite até ${max} sabores.`);
+    return;
+  }
+  selected.push({name,desc});
+  pizzaSelections[cat]=selected;
+  if(e&&e.target){
+    e.target.classList.add('in-cart');
+    e.target.textContent='✓';
+    setTimeout(()=>{e.target.classList.remove('in-cart');e.target.textContent='+'},900);
+  }
+  renderPizzaBuilder(cat);
+}
+
+function removePizzaFlavor(cat,index){
+  pizzaSelections[cat].splice(index,1);
+  renderPizzaBuilder(cat);
+}
+
+function clearPizzaSelection(cat){
+  pizzaSelections[cat]=[];
+  renderPizzaBuilder(cat);
+}
+
+function addSelectedPizza(cat){
+  const selected=pizzaSelections[cat]||[];
+  if(!selected.length) return;
+  const sz=sizes[cat];
+  const name=selected.length===1?selected[0].name:(selected.length===2?`Meia ${selected[0].name} / Meia ${selected[1].name}`:selected.map(item=>item.name).join(' / '));
+  const desc=selected.map(item=>`${item.name}: ${item.desc}`).join(' | ');
+  cart.push({cat,name,desc,size:sz.name,slices:sz.slices,price:sz.price,qty:1,id:Date.now()+Math.random()});
+  clearPizzaSelection(cat);
+  renderCart();
+  updateTotals();
+}
+
+function addToCart(cat,name,desc,e,price,variant){
+  if(isPizzaCategory(cat)){
+    selectPizzaFlavor(cat,name,desc,e);
+    return;
+  }
+  if(e) e.stopPropagation();
+  const sz=sizes[cat]||{name:'Unidade',slices:'',price:0};
+  const itemPrice=typeof price==='number'?price:sz.price;
+  const itemName=variant?`${name} (${variant})`:name;
+  const itemDesc=variant?`${desc} - ${variant}`:desc;
+  cart.push({cat,name:itemName,desc:itemDesc,size:sz.name,slices:sz.slices,price:itemPrice,qty:1,id:Date.now()+Math.random()});
+  renderCart();
+  updateTotals();
+  if(e&&e.target){
+    e.target.classList.add('in-cart');
+    e.target.textContent='✓';
+    setTimeout(()=>{e.target.classList.remove('in-cart');e.target.textContent='+'},1200);
+  }
+}
+
+function renderCart(){
+  const mini=document.getElementById('cart-items-mini');
+  const count=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cart-count').textContent=count;
+  if(cart.length===0){
+    mini.innerHTML='';
+    renderFullCart();
+    renderSuggestedBebidas();
+    return;
+  }
+  mini.innerHTML='';
+  cart.slice(-3).forEach(item=>{
+    const div=document.createElement('div');
+    div.className='cart-item';
+    div.innerHTML=`<span class="ci-name">${item.name} <small style="color:#7a4030;font-size:10px">(${item.size})</small></span><div class="ci-qty"><button onclick="changeQty(${item.id},-1)">−</button><span>${item.qty}</span><button onclick="changeQty(${item.id},1)">+</button></div><span class="ci-price">R$${(item.price*item.qty).toFixed(2).replace('.',',')}</span>`;
+    mini.appendChild(div);
+  });
+  if(cart.length>3){
+    const more=document.createElement('div');
+    more.style.cssText='text-align:center;font-size:11px;color:#7a4030;padding:4px';
+    more.textContent='+'+(cart.length-3)+' mais no pedido';
+    mini.appendChild(more);
+  }
+  renderFullCart();
+  renderSuggestedBebidas();
+}
+
+function renderSuggestedBebidas(){
+  const area=document.getElementById('bebidas-area');
+  const list=document.getElementById('list-bebidas-suggest');
+  if(!area||!list) return;
+  const activeTab=document.querySelector('.tab.active')?.textContent||'';
+  area.style.display=['Tradicionais','Especiais','Doces'].includes(activeTab)&&BEBIDAS.length>0?'block':'none';
+  list.innerHTML='';
+  BEBIDAS.forEach(b=>{
+    const item=document.createElement('div');
+    item.className='pizza-card';
+    const variantId=b.variants&&b.variants.length?`suggest-${b.name.replace(/\s+/g,'_').replace(/[^\w-]/g,'')}`:'';
+    const variantHtml=variantId?`<div style="margin:10px 0"><select class="delivery-input" id="${variantId}" style="width:100%">${b.variants.map(v=>`<option value="${escapeAttr(v)}">${v}</option>`).join('')}</select></div>`:'';
+    const variantArg=variantId?`,document.getElementById('${variantId}').value`:'';
+    item.innerHTML=`<div class="pizza-info"><div class="pizza-name">${b.name}</div><div class="pizza-desc">${b.desc||'Bebida'}</div>${variantHtml}</div><button class="add-btn" onclick="addToCart('bebidas','${escapeAttr(b.name)}','${escapeAttr(b.desc||'Bebida')}',event,${Number(b.price)||0}${variantArg})">+</button>`;
+    list.appendChild(item);
+  });
+}
+
+function changeQty(id,delta){
+  const idx=cart.findIndex(i=>i.id===id);
+  if(idx===-1) return;
+  cart[idx].qty+=delta;
+  if(cart[idx].qty<=0) cart.splice(idx,1);
+  renderCart();
+  updateTotals();
+}
+
+function renderFullCart(){
+  const s=document.getElementById('cart-summary');
+  if(!s) return;
+  if(cart.length===0){
+    s.innerHTML='<div style="text-align:center;color:#5a2400;padding:30px 0"><p style="font-size:32px">🍕</p><p style="margin-top:8px;font-size:14px">Seu pedido está vazio</p><p style="font-size:12px;color:#7a4030;margin-top:4px">Escolha sabores nas abas acima</p></div>';
+    return;
+  }
+  let html='<div class="section-title">Itens do Pedido</div>';
+  cart.forEach(item=>{
+    html+=`<div class="pizza-card" style="margin-bottom:8px"><div class="pizza-info"><div class="pizza-name">${item.name} <span style="color:#c0856a;font-size:11px">(${item.size}${item.slices?' · '+item.slices:''})</span></div><div class="pizza-desc">${item.desc}</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><div class="ci-qty"><button onclick="changeQty(${item.id},-1)">−</button><span>${item.qty}</span><button onclick="changeQty(${item.id},1)">+</button></div><span style="color:#ff6b3d;font-weight:700">R$${(item.price*item.qty).toFixed(2).replace('.',',')}</span></div></div>`;
+  });
+  if(selectedBorda) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div class="pizza-name">Borda ${selectedBorda.name}</div><span style="color:#ff6b3d;font-weight:700">R$${selectedBorda.price.toFixed(2).replace('.',',')}</span></div>`;
+  const street=document.getElementById('addr-street')?.value.trim()||'';
+  const number=document.getElementById('addr-number')?.value.trim()||'';
+  const customer=document.getElementById('customer-name')?.value.trim()||'';
+  const neighborhood=getSelectedNeighborhoodName();
+  const payment=getPaymentMethod();
+  const delivery=parseFloat(document.getElementById('delivery-fee')?.value)||0;
+  if(customer) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px"><div class="pizza-name">Cliente</div><div style="color:#c0856a;font-size:13px">${customer}</div></div>`;
+  if(street||number||neighborhood) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div class="pizza-name">Endereço</div><div style="color:#c0856a;font-size:13px">${street} ${number} - ${neighborhood}</div></div><span style="color:#ff6b3d;font-weight:700">R$${delivery.toFixed(2).replace('.',',')}</span></div>`;
+  if(payment) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px"><div class="pizza-name">Pagamento</div><div style="color:#c0856a;font-size:13px">${payment}</div></div>`;
+  s.innerHTML=html;
+}
+
+function updateTotals(){
+  const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const borda=selectedBorda?selectedBorda.price:0;
+  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
+  const total=sub+borda+delivery;
+  document.getElementById('total-display').textContent='R$ '+total.toFixed(2).replace('.',',');
+  updateAddressValidationUI();
+  document.getElementById('checkout-btn').disabled=!(isStoreOpen()&&cart.length>0&&isAddressValid()&&isPaymentSelected());
+  renderFullCart();
+}
+
+function getPaymentMethod(){
+  return document.getElementById('payment-method')?.value||'';
+}
+
+function isPaymentSelected(){
+  return getPaymentMethod()!=='';
+}
+
+function renderBordas(){
+  const g=document.getElementById('bordas-grid');
+  g.innerHTML='<div class="border-opt '+(selectedBorda===null?'selected':'')+'" onclick="selectBorda(null,this)"><div class="b-name">Sem borda</div><div class="b-price">Grátis</div></div>';
+  BORDAS.forEach(b=>{
+    const d=document.createElement('div');
+    d.className='border-opt';
+    d.onclick=function(){selectBorda(b,this)};
+    d.innerHTML=`<div class="b-name">${b.name}</div><div class="b-price">+R$${b.price},00</div>`;
+    g.appendChild(d);
+  });
+  const sel=document.getElementById('addr-borda');
+  sel.innerHTML='<option value="">Sem borda</option>';
+  BORDAS.forEach((b,idx)=>{
+    const o=document.createElement('option');
+    o.value=idx;
+    o.textContent=b.name+' - R$'+b.price.toFixed(2).replace('.',',');
+    sel.appendChild(o);
+  });
+  if(selectedBorda){
+    const idx=BORDAS.findIndex(x=>x.name===selectedBorda.name);
+    sel.value=idx>-1?idx:'';
+  }
+}
+
+function selectBordaByIndex(idx){
+  selectedBorda=idx===''?null:Object.assign({},BORDAS[parseInt(idx,10)]);
+  document.querySelectorAll('.border-opt').forEach(el=>el.classList.remove('selected'));
+  const items=document.querySelectorAll('#bordas-grid .border-opt');
+  if(items.length) items[selectedBorda?parseInt(idx,10)+1:0].classList.add('selected');
+  updateTotals();
+}
+
+function selectBorda(borda,el){
+  selectedBorda=borda;
+  document.querySelectorAll('.border-opt').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  const sel=document.getElementById('addr-borda');
+  sel.value=borda?BORDAS.findIndex(x=>x.name===borda.name):'';
+  updateTotals();
+}
+
+function isPizzaTab(name){
+  return ['tradicionais','especiais','doces'].includes(name);
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const tabs=['tradicionais','especiais','doces','bordas','pedido'];
+    t.classList.toggle('active',tabs[i]===name);
+  });
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  const area=document.getElementById('bebidas-area');
+  if(area){
+    area.style.display=isPizzaTab(name)&&BEBIDAS.length>0?'block':'none';
+    if(isPizzaTab(name)) renderSuggestedBebidas();
+  }
+  if(name==='pedido') renderFullCart();
+}
+
+function normalizePaymentForOrder(payment){
+  if(payment==='PIX') return 'pix';
+  if(payment==='Cartão no entregador') return 'cartao';
+  return 'dinheiro';
+}
+
+function getOrderAmounts(){
+  const itemsSubtotal=cart.reduce((s,i)=>s+i.price*i.qty,0)+(selectedBorda?selectedBorda.price:0);
+  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
+  return {subtotal:itemsSubtotal,delivery,total:itemsSubtotal+delivery};
+}
+
+function buildWhatsappMessage(orderNumber){
+  let msg='🍕 *Pedido - La Casa da Pizza*\n\n';
+  if(orderNumber) msg+=`Pedido #${orderNumber}\n\n`;
+  const customer=document.getElementById('customer-name').value.trim();
+  msg+=`Cliente: ${customer}\n`;
+  cart.forEach(i=>{msg+=`▸ ${i.qty}x ${i.name} (${i.size}): R$${(i.price*i.qty).toFixed(2)}\n`;});
+  if(selectedBorda) msg+=`▸ Borda ${selectedBorda.name}: R$${selectedBorda.price.toFixed(2)}\n`;
+  const street=document.getElementById('addr-street').value.trim();
+  const number=document.getElementById('addr-number').value.trim();
+  const neighborhood=getSelectedNeighborhoodName();
+  const payment=getPaymentMethod();
+  const amounts=getOrderAmounts();
+  msg+=`\nEndereço: ${street} ${number} - ${neighborhood}\n`;
+  if(amounts.delivery>0) msg+=`▸ Taxa de entrega: R$${amounts.delivery.toFixed(2)}\n`;
+  msg+=`▸ Pagamento: ${payment}\n`;
+  msg+=`\n*Total: R$${amounts.total.toFixed(2)}*`;
+  return msg;
+}
+
+async function saveOrderToSupabase(){
+  const customer=document.getElementById('customer-name').value.trim();
+  const street=document.getElementById('addr-street').value.trim();
+  const number=document.getElementById('addr-number').value.trim();
+  const neighborhood=getSelectedNeighborhoodName();
+  const payment=getPaymentMethod();
+  const amounts=getOrderAmounts();
+  const orderRows=await supabaseInsert('orders',[{
+    cliente:customer,
+    endereco:`${street} ${number}`.trim(),
+    bairro:neighborhood,
+    taxa:amounts.delivery,
+    subtotal:amounts.subtotal,
+    total:amounts.total,
+    pagamento:normalizePaymentForOrder(payment),
+    status:'novo'
+  }]);
+  const order=orderRows&&orderRows[0];
+  if(!order?.id) throw new Error('Pedido sem ID.');
+  const items=cart.map(i=>({
+    order_id:order.id,
+    name:`${i.name} (${i.size})`,
+    qty:i.qty,
+    price:Number(i.price)||0
+  }));
+  if(selectedBorda){
+    items.push({
+      order_id:order.id,
+      name:`Borda ${selectedBorda.name}`,
+      qty:1,
+      price:Number(selectedBorda.price)||0
+    });
+  }
+  await supabaseInsert('order_items',items);
+  return order;
+}
+
+async function sendToWhatsapp(){
+  if(cart.length===0) return;
+  const closedReason=getStoreClosedReason();
+  if(closedReason){alert(closedReason);return;}
+  if(!isAddressValid()){alert('Preencha nome, rua, número e selecione o bairro para entrega.');return;}
+  if(!isPaymentSelected()){alert('Selecione a forma de pagamento para finalizar o pedido.');return;}
+  const btn=document.getElementById('checkout-btn');
+  btn.disabled=true;
+  btn.textContent='Enviando...';
+  let savedOrder=null;
+  try{
+    savedOrder=await saveOrderToSupabase();
+  }catch(e){
+    console.warn('Pedido não salvo no painel.',e);
+    alert('Não foi possível salvar o pedido no painel. O WhatsApp será aberto mesmo assim.');
+  }finally{
+    btn.textContent='Finalizar Pedido';
+    updateTotals();
+  }
+  const msg=buildWhatsappMessage(savedOrder?.numero);
+  const url='https://wa.me/55'+'38988532530'+'?text='+encodeURIComponent(msg);
+  window.open(url,'_blank');
+}
+
+async function loadBeverages(){
+  try{
+    const rows=await supabaseGet('products','?select=name,price,category,active&category=eq.Bebida&active=eq.true&order=name.asc');
+    if(Array.isArray(rows)&&rows.length){
+      BEBIDAS=rows.map(b=>({name:b.name,desc:'Bebida',price:Number(b.price)||0,variants:[]}));
+      localStorage.setItem('pizzaria_beverages',JSON.stringify(BEBIDAS));
+      return;
+    }
+  }catch(e){}
+  BEBIDAS=[];
+  try{localStorage.removeItem('pizzaria_beverages');}catch(e){}
+}
+
+async function loadNeighborhoods(){
+  try{
+    const rows=await supabaseGet('bairros','?select=name,taxa,active&active=eq.true&order=name.asc');
+    if(Array.isArray(rows)&&rows.length){
+      NEIGHBORHOODS=rows.map(n=>({name:n.name,fee:Number(n.taxa)||0,active:n.active!==false}));
+      localStorage.setItem('pizzaria_neighborhoods',JSON.stringify(NEIGHBORHOODS));
+      return;
+    }
+  }catch(e){}
+  NEIGHBORHOODS=[];
+  try{localStorage.removeItem('pizzaria_neighborhoods');}catch(e){}
+}
+
+function populateNeighborhoods(){
+  const list=document.getElementById('neighborhood-options');
+  const search=document.getElementById('addr-neighborhood-search');
+  list.innerHTML='';
+  document.getElementById('addr-neighborhood').value='';
+  document.getElementById('delivery-fee').value='';
+  if(NEIGHBORHOODS.length===0){
+    search.placeholder='Cadastre bairros no admin';
+    search.disabled=true;
+    return;
+  }
+  search.placeholder='Digite o bairro';
+  search.disabled=false;
+  NEIGHBORHOODS.forEach((n,idx)=>{
+    if(n.active===false) return;
+    const opt=document.createElement('option');
+    opt.value=n.name;
+    opt.label=n.name+(n.fee>0?' - R$'+n.fee.toFixed(2).replace('.',','):' - Grátis');
+    opt.dataset.index=idx;
+    list.appendChild(opt);
+  });
+}
+
+function normalizeText(value){
+  return String(value||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function onNeighborhoodInput(){
+  const input=document.getElementById('addr-neighborhood-search');
+  const hidden=document.getElementById('addr-neighborhood');
+  const typed=normalizeText(input.value);
+  const idx=NEIGHBORHOODS.findIndex(n=>normalizeText(n.name)===typed&&n.active!==false);
+  hidden.value=idx>=0?idx:'';
+  document.getElementById('delivery-fee').value=idx>=0?(Number(NEIGHBORHOODS[idx].fee)||0):'';
+  updateTotals();
+}
+
+function getSelectedNeighborhoodName(){
+  const idx=document.getElementById('addr-neighborhood')?.value;
+  return idx===''?'':(NEIGHBORHOODS[parseInt(idx,10)]?.name||'');
+}
+
+function isAddressValid(){
+  const customer=document.getElementById('customer-name').value.trim();
+  if(customer==='') return false;
+  const neigh=document.getElementById('addr-neighborhood').value;
+  if(neigh==='') return false;
+  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
+  if(delivery===0) return true;
+  const street=document.getElementById('addr-street').value.trim();
+  const number=document.getElementById('addr-number').value.trim();
+  return street!==''&&number!=='';
+}
+
+function updateAddressValidationUI(){
+  const ok=isAddressValid();
+  const err=document.getElementById('addr-error');
+  if(err) err.style.display=ok?'none':'block';
+}
+
+async function initApp(){
+  await Promise.all([loadPrices(),loadNeighborhoods(),loadBeverages(),loadStoreSettings()]);
+  syncSelectedSizes();
+  renderStoreStatus();
+  renderSizePrices();
+  renderList('list-trad',PIZZAS_TRAD,'trad');
+  renderList('list-esp',PIZZAS_ESP,'esp');
+  renderList('list-doce',PIZZAS_DOCE,'doce');
+  renderAllPizzaBuilders();
+  renderBordas();
+  populateNeighborhoods();
+  renderCart();
+  renderSuggestedBebidas();
+  switchTab('tradicionais');
+  updateTotals();
+}
+
+initApp();
+</script>
+</body>
+</html>
