@@ -487,20 +487,37 @@ function paymentLabel(value){
 async function loadOrders(silent=false){
   const list=$('ordersList');
   if(!list) return;
+
   if(!await ensureFreshSession()){
     if(!silent) list.textContent='Entre novamente para carregar os pedidos.';
     return;
   }
+
   if(!silent){
     list.className='notice';
     list.textContent='Carregando pedidos...';
   }
+
   try{
-    orders=await supabaseGetAuth('orders','?select=id,numero,cliente,endereco,bairro,taxa,subtotal,total,pagamento,troco,obs,status,hora,data,created_at,order_items(id,name,qty,price)&order=created_at.desc&limit=30');
+    // Busca os pedidos junto com os itens no mesmo formato que o admin antigo usava.
+    orders = await supabaseGetAuth(
+      'orders',
+      '?select=*,order_items(*)&order=created_at.desc&limit=30'
+    );
+
+    orders = (orders || []).map(order => ({
+      ...order,
+      order_items: Array.isArray(order.order_items) ? order.order_items : []
+    }));
+
     renderOrders();
+
   }catch(e){
-    console.warn('Erro ao carregar pedidos.',e);
-    if(!silent) list.textContent='Não foi possível carregar os pedidos. Verifique o SQL e as políticas do Supabase.';
+    console.error('Erro ao carregar pedidos:', e);
+    if(!silent){
+      list.className='notice';
+      list.textContent='Não foi possível carregar os pedidos: ' + (e.message || e);
+    }
   }
 }
 
