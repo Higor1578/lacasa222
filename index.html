@@ -230,6 +230,7 @@ body{font-family:'Nunito',sans-serif;background:#1a0a00;color:#fff2e6;min-height
   <button class="checkout-btn" id="checkout-btn" onclick="sendToWhatsapp()" disabled>Finalizar Pedido</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const PIZZAS_TRAD=[
   {name:'Calabresa',desc:'Mussarela e Calabresa'},
@@ -277,6 +278,7 @@ const PIZZAS_DOCE=[
 const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
 const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
 const SUPABASE_HEADERS={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
+const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 let BEBIDAS=[];
 const BORDAS=[{name:'Catupiry',price:5},{name:'Cheddar',price:5},{name:'Brigadeiro',price:5}];
@@ -734,24 +736,40 @@ function buildWhatsappMessage(orderNumber){
 }
 
 async function saveOrderToSupabase(){
-  const orderId=createOrderId();
+  if(!db) throw new Error('Biblioteca do Supabase não carregou. Verifique sua internet.');
+
   const orderNumber=createOrderNumber();
   const customer=document.getElementById('customer-name').value.trim();
   const street=document.getElementById('addr-street').value.trim();
   const number=document.getElementById('addr-number').value.trim();
   const neighborhood=getSelectedNeighborhoodName();
+  const neighborhoodId=getSelectedNeighborhoodId();
   const payment=getPaymentMethod();
   const amounts=getOrderAmounts();
 
   const now=new Date();
-  const dataPedido=now.toLocaleDateString('pt-BR');
+  const dataPedido=now.toISOString().slice(0,10);
   const horaPedido=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 
-  await supabaseInsert('orders',[{
-    id:orderId,
+  const items=cart.map(i=>({
+    name:`${i.name} (${i.size})`,
+    qty:Number(i.qty)||1,
+    price:Number(i.price)||0
+  }));
+
+  if(selectedBorda){
+    items.push({
+      name:`Borda ${selectedBorda.name}`,
+      qty:1,
+      price:Number(selectedBorda.price)||0
+    });
+  }
+
+  const payload={
     numero:orderNumber,
-    cliente:customer,
+    cliente:customer || null,
     endereco:`${street} ${number}`.trim(),
+    bairro_id:neighborhoodId || null,
     bairro:neighborhood,
     taxa:amounts.delivery,
     subtotal:amounts.subtotal,
@@ -760,31 +778,14 @@ async function saveOrderToSupabase(){
     troco:null,
     obs:'',
     status:'novo',
+    hora:horaPedido,
     data:dataPedido,
-    hora:horaPedido
-  }]);
+    items
+  };
 
-  const items=cart.map(i=>({
-    order_id:orderId,
-    name:`${i.name} (${i.size})`,
-    qty:i.qty,
-    price:Number(i.price)||0
-  }));
-
-  if(selectedBorda){
-    items.push({
-      order_id:orderId,
-      name:`Borda ${selectedBorda.name}`,
-      qty:1,
-      price:Number(selectedBorda.price)||0
-    });
-  }
-
-  if(items.length){
-    await supabaseInsert('order_items',items);
-  }
-
-  return {id:orderId,numero:orderNumber};
+  const {data,error}=await db.rpc('create_public_order',{p_order:payload});
+  if(error) throw new Error(error.message || 'Erro ao salvar pedido no Supabase.');
+  return {id:data?.id,numero:data?.numero || orderNumber};
 }
 
 async function sendToWhatsapp(){
@@ -826,9 +827,9 @@ async function loadBeverages(){
 
 async function loadNeighborhoods(){
   try{
-    const rows=await supabaseGet('bairros','?select=name,taxa,active&active=eq.true&order=name.asc');
+    const rows=await supabaseGet('bairros','?select=id,name,taxa,active&active=eq.true&order=name.asc');
     if(Array.isArray(rows)&&rows.length){
-      NEIGHBORHOODS=rows.map(n=>({name:n.name,fee:Number(n.taxa)||0,active:n.active!==false}));
+      NEIGHBORHOODS=rows.map(n=>({id:n.id,name:n.name,fee:Number(n.taxa)||0,active:n.active!==false}));
       localStorage.setItem('pizzaria_neighborhoods',JSON.stringify(NEIGHBORHOODS));
       return;
     }
@@ -877,6 +878,11 @@ function onNeighborhoodInput(){
 function getSelectedNeighborhoodName(){
   const idx=document.getElementById('addr-neighborhood')?.value;
   return idx===''?'':(NEIGHBORHOODS[parseInt(idx,10)]?.name||'');
+}
+
+function getSelectedNeighborhoodId(){
+  const idx=document.getElementById('addr-neighborhood')?.value;
+  return idx===''?'':(NEIGHBORHOODS[parseInt(idx,10)]?.id||'');
 }
 
 function isAddressValid(){
