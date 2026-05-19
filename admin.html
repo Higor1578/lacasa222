@@ -2,52 +2,625 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Admin La Casa da Pizza</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#120900;--card:#24130c;--card2:#1b0e08;--line:#4e2b1d;--txt:#fff3df;--muted:#e7bc8f;--orange:#ff6b39;--gold:#ffb86c;--green:#2ecc71;--blue:#3498db;--red:#e74c3c;font-family:Arial,Helvetica,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt)}button,input,select,textarea{font:inherit}button{cursor:pointer}.wrap{max-width:980px;margin:0 auto;padding:14px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.top h1{margin:0;color:var(--gold);font-size:24px}.top small{color:var(--muted)}.btn{border:0;border-radius:12px;padding:10px 13px;background:var(--orange);color:#180800;font-weight:800}.btn.secondary{background:#5d2c15;color:white}.btn.danger{background:var(--red);color:white}.btn.green{background:var(--green);color:#06190c}.btn.blue{background:var(--blue);color:white}.hidden{display:none!important}.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}.box,.card{background:var(--card);border:1px solid #3c1e14;border-radius:18px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.25)}.box{width:100%;max-width:380px}.field{margin:10px 0}.field label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:11px;color:white}.tabs{display:flex;gap:8px;overflow-x:auto;margin:12px 0;padding-bottom:6px}.tab{white-space:nowrap;background:#1f120a;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-weight:800}.tab.active{background:var(--orange);color:#180800;border-color:var(--orange)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stat{background:var(--card);border:1px solid #3c1e14;border-radius:16px;padding:14px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;margin-top:6px;color:var(--gold);font-size:24px}.card{margin-bottom:14px}.card h2{margin:0 0 10px;color:var(--gold);font-size:19px}.order{background:#1f120a;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}.orderHead{display:flex;justify-content:space-between;gap:10px}.pill{display:inline-flex;border:1px solid var(--line);background:#140904;border-radius:999px;padding:5px 9px;color:var(--gold);font-size:12px;font-weight:800}.items{margin-top:8px;color:#f7d3ae;font-size:13px;line-height:1.5}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions select{background:#5d2c15;color:white;border:0;border-radius:10px;padding:8px}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid #3a1e14;padding:9px;text-align:left;font-size:13px}.table th{color:var(--gold)}.notice{background:#311a11;border:1px solid #4d2f22;border-radius:12px;padding:12px;color:#f5d3aa;margin:10px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.small{font-size:12px;color:var(--muted)}@media(max-width:600px){.top{align-items:flex-start}.top h1{font-size:21px}.orderHead{flex-direction:column}.row{display:block}.row>*{margin-bottom:8px}.table{font-size:12px}}
+:root{
+  --bg:#100704;
+  --panel:#1c0d08;
+  --panel2:#27120b;
+  --line:#3b1b10;
+  --text:#fff4e8;
+  --muted:#c99f7c;
+  --brand:#ff6b35;
+  --brand2:#ffb45c;
+  --green:#2ecc71;
+  --blue:#3498db;
+  --red:#e74c3c;
+  --yellow:#f39c12;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#100704,#210b05);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.login-box{
+  width:100%;
+  max-width:390px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+}
+.login-box h1{margin:0 0 8px;color:var(--brand2);font-size:28px}
+.login-box p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.4}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--brand2);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.input, .select, textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#120804;
+  color:var(--text);
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.input:focus,.select:focus,textarea:focus{border-color:var(--brand)}
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:11px 14px;
+  background:var(--brand);
+  color:#160801;
+  font-weight:800;
+}
+.btn.secondary{background:#35190f;color:var(--text);border:1px solid var(--line)}
+.btn.green{background:var(--green);color:#071b0d}
+.btn.blue{background:var(--blue);color:#061019}
+.btn.red{background:var(--red);color:#fff}
+.btn.small{padding:7px 10px;border-radius:10px;font-size:12px}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+.sidebar{
+  background:rgba(18,8,4,.94);
+  border-right:1px solid var(--line);
+  padding:18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.logo-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  font-size:24px;
+}
+.logo h2{margin:0;color:var(--brand2);font-size:18px}
+.logo span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:8px}
+.nav button{
+  text-align:left;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid transparent;
+  border-radius:14px;
+  padding:12px;
+  font-weight:700;
+}
+.nav button.active{
+  background:var(--panel2);
+  color:var(--text);
+  border-color:var(--line);
+}
+.nav-footer{
+  position:absolute;
+  left:18px;right:18px;bottom:18px;
+}
+.main{
+  padding:22px;
+  max-width:1200px;
+  width:100%;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:20px;
+}
+.topbar h1{margin:0;color:var(--brand2);font-size:26px}
+.topbar p{margin:5px 0 0;color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.card{
+  background:rgba(28,13,8,.92);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.stat-value{font-size:26px;color:var(--brand2);font-weight:900}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.section-title h2{margin:0;color:var(--brand2);font-size:20px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+th{color:var(--brand2);font-size:12px;text-transform:uppercase;letter-spacing:.7px}
+td{color:#ffe8d5}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:800;
+  background:#32170e;
+  border:1px solid var(--line);
+}
+.badge.novo{color:var(--yellow)}
+.badge.preparando{color:var(--blue)}
+.badge.entregue{color:var(--green)}
+.badge.cancelado{color:var(--red)}
+.order-card{
+  display:grid;
+  grid-template-columns:1.2fr 1fr auto;
+  gap:14px;
+  padding:14px;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  margin-bottom:10px;
+}
+.order-card strong{color:var(--brand2)}
+.order-meta{font-size:13px;color:var(--muted);line-height:1.5}
+.items{font-size:13px;line-height:1.5;color:#ffe8d5}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.notice{
+  background:#2c140c;
+  border:1px solid var(--line);
+  color:#ffd7b5;
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:14px;
+  font-size:14px;
+}
+.tabs-mobile{display:none}
+@media(max-width:850px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:14px}
+  .tabs-mobile{
+    display:flex;
+    position:sticky;
+    top:0;
+    z-index:5;
+    gap:8px;
+    overflow-x:auto;
+    background:#100704;
+    padding:10px 0;
+    margin-bottom:12px;
+  }
+  .tabs-mobile button{
+    white-space:nowrap;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 12px;
+    font-weight:800;
+  }
+  .tabs-mobile button.active{background:var(--brand);color:#160801}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .order-card{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div id="login" class="login"><div class="box"><h1 style="color:var(--gold);margin:0 0 6px">Admin La Casa</h1><p class="small">Entre com o email e senha do Supabase Auth.</p><div class="field"><label>Email</label><input id="email" type="email" autocomplete="username"></div><div class="field"><label>Senha</label><input id="senha" type="password" autocomplete="current-password"></div><button class="btn" style="width:100%" onclick="login()">Entrar</button><div id="loginMsg" class="notice hidden"></div></div></div>
-<div id="app" class="wrap hidden"><div class="top"><div><h1>🍕 Admin La Casa</h1><small id="userText">Painel de pedidos</small></div><button class="btn secondary" onclick="logout()">Sair</button></div><div class="tabs"><button class="tab active" onclick="tab('dashboard')">Dashboard</button><button class="tab" onclick="tab('pedidos')">Pedidos</button><button class="tab" onclick="tab('produtos')">Produtos</button><button class="tab" onclick="tab('bairros')">Bairros</button><button class="tab" onclick="tab('funcionamento')">Funcionamento</button></div><div id="content"></div></div>
+
+<section id="loginScreen" class="login">
+  <form class="login-box" onsubmit="login(event)">
+    <h1>🍕 La Casa Admin</h1>
+    <p>Painel novo para acompanhar pedidos, dashboard, produtos, bairros, bebidas e funcionamento.</p>
+    <div class="field">
+      <label>Email</label>
+      <input class="input" id="email" type="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button class="btn" id="loginBtn" type="submit" style="width:100%">Entrar</button>
+    <div id="loginMsg" class="notice hidden" style="margin-top:14px"></div>
+  </form>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🍕</div>
+      <div><h2>La Casa</h2><span>Painel administrativo</span></div>
+    </div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="nav-footer">
+      <button class="btn secondary" onclick="logout()" style="width:100%">Sair</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="tabs-mobile" id="mobileNav"></div>
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Resumo geral da pizzaria.</p>
+      </div>
+      <div class="row">
+        <button class="btn secondary" onclick="loadAll()">Atualizar</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</section>
+
 <script>
 const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
 const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
-const AUTH_KEY='la_casa_admin_session_v2';
-let session=null,current='dashboard',orders=[],products=[],bairros=[],settings={manual_closed:false,closed_days:[]};
-const $=id=>document.getElementById(id); const money=v=>'R$ '+(Number(v)||0).toFixed(2).replace('.',',');
-function headers(auth=false,extra={}){return Object.assign({apikey:SUPABASE_KEY,Authorization:'Bearer '+(auth&&session?.access_token?session.access_token:SUPABASE_KEY),'Content-Type':'application/json'},extra)}
-async function api(path,opt={}){const r=await fetch(SUPABASE_URL+path,opt); if(!r.ok){const t=await r.text().catch(()=> ''); throw new Error(r.status+' '+t)} return r.status===204?null:r.json()}
-async function login(){try{$('loginMsg').classList.add('hidden');const email=$('email').value.trim(),password=$('senha').value;if(!email||!password)throw new Error('Preencha email e senha.');const data=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:headers(false),body:JSON.stringify({email,password})});session={access_token:data.access_token,refresh_token:data.refresh_token,user:data.user,expires_at:Date.now()+(data.expires_in||3600)*1000};localStorage.setItem(AUTH_KEY,JSON.stringify(session));showApp();await loadAll();render()}catch(e){$('loginMsg').textContent='Erro ao entrar: '+e.message;$('loginMsg').classList.remove('hidden')}}
-async function refresh(){if(!session)return false;if(Date.now()<session.expires_at-60000)return true;try{const data=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:headers(false),body:JSON.stringify({refresh_token:session.refresh_token})});session={access_token:data.access_token,refresh_token:data.refresh_token,user:data.user,expires_at:Date.now()+(data.expires_in||3600)*1000};localStorage.setItem(AUTH_KEY,JSON.stringify(session));return true}catch(e){logout();return false}}
-function showApp(){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('userText').textContent=session?.user?.email||'Admin';}
-function logout(){localStorage.removeItem(AUTH_KEY);session=null;$('app').classList.add('hidden');$('login').classList.remove('hidden')}
-async function loadAll(){await refresh(); await Promise.all([loadOrders(),loadProducts(),loadBairros(),loadSettings()]);}
-async function loadOrders(){await refresh(); try{orders=await api('/rest/v1/orders?select=*,order_items(*)&order=created_at.desc&limit=100',{headers:headers(true)});}catch(e){console.warn('join falhou, tentando separado',e);orders=await api('/rest/v1/orders?select=*&order=created_at.desc&limit=100',{headers:headers(true)});try{const ids=orders.map(o=>o.id).join(',');const its=ids?await api('/rest/v1/order_items?select=*&order_id=in.('+ids+')',{headers:headers(true)}):[];orders.forEach(o=>o.order_items=its.filter(i=>String(i.order_id)===String(o.id)))}catch(err){orders.forEach(o=>o.order_items=[])}}}
-async function loadProducts(){await refresh();products=await api('/rest/v1/products?select=*&order=category.asc,name.asc',{headers:headers(true)}).catch(()=>[])}
-async function loadBairros(){await refresh();bairros=await api('/rest/v1/bairros?select=*&order=name.asc',{headers:headers(true)}).catch(()=>[])}
-async function loadSettings(){const rows=await api('/rest/v1/store_settings?select=*&key=eq.status',{headers:headers(false)}).catch(()=>[]); if(rows[0]?.value)settings=Object.assign(settings,rows[0].value)}
-function tab(name){current=name;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));[...document.querySelectorAll('.tab')].find(b=>b.textContent.toLowerCase().includes(name==='funcionamento'?'funcionamento':name))?.classList.add('active');render()}
-function render(){if(current==='dashboard')renderDash();if(current==='pedidos')renderPedidos();if(current==='produtos')renderProdutos();if(current==='bairros')renderBairros();if(current==='funcionamento')renderFuncionamento()}
-function today(){return new Date().toISOString().slice(0,10)}
-function renderDash(){const hoje=orders.filter(o=>o.data===today());const totalHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);const novos=orders.filter(o=>o.status==='novo').length;const mes=today().slice(0,7);const totalMes=orders.filter(o=>(o.data||'').slice(0,7)===mes).reduce((s,o)=>s+Number(o.total||0),0);$('content').innerHTML=`<div class="grid"><div class="stat"><span>Pedidos hoje</span><strong>${hoje.length}</strong></div><div class="stat"><span>Novos</span><strong>${novos}</strong></div><div class="stat"><span>Faturamento hoje</span><strong>${money(totalHoje)}</strong></div><div class="stat"><span>Faturamento mês</span><strong>${money(totalMes)}</strong></div></div><div class="card"><h2>Últimos pedidos</h2><button class="btn" onclick="loadAll().then(render)">Atualizar</button>${orders.slice(0,8).map(orderHtml).join('')||'<div class="notice">Nenhum pedido.</div>'}</div>`}
-function orderHtml(o){const items=(o.order_items||[]).map(i=>`${i.qty}x ${i.name} - ${money(Number(i.price)*Number(i.qty))}`).join('<br>')||'<span class="small">Sem itens carregados</span>';return `<div class="order"><div class="orderHead"><div><b style="color:var(--gold)">Pedido #${o.numero||String(o.id).slice(0,8)}</b><div class="small">${o.data||''} ${o.hora||''}</div></div><span class="pill">${o.status||'novo'}</span></div><div class="small" style="margin-top:7px">Cliente: ${o.cliente||'Não informado'}<br>Endereço: ${o.endereco||''} - ${o.bairro||''}<br>Pagamento: ${o.pagamento||''}<br>Total: <b>${money(o.total)}</b></div><div class="items">${items}</div><div class="actions"><select onchange="statusOrder('${o.id}',this.value)">${['novo','preparando','entregue','cancelado'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn secondary" onclick="printOrder('${o.id}')">Imprimir</button></div></div>`}
-function renderPedidos(){$('content').innerHTML=`<div class="card"><h2>Pedidos</h2><div class="row"><button class="btn" onclick="loadOrders().then(render)">Atualizar pedidos</button><select id="filter" onchange="renderPedidos()"><option value="todos">Todos</option><option value="novo">Novos</option><option value="hoje">Hoje</option></select></div><div id="listPedidos"></div></div>`;const f=$('filter').value||'todos';let list=orders;if(f==='novo')list=orders.filter(o=>o.status==='novo');if(f==='hoje')list=orders.filter(o=>o.data===today());$('listPedidos').innerHTML=list.map(orderHtml).join('')||'<div class="notice">Nenhum pedido encontrado.</div>'}
-async function statusOrder(id,status){await refresh();try{await api('/rest/v1/orders?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:headers(true,{Prefer:'return=minimal'}),body:JSON.stringify({status})});const o=orders.find(x=>String(x.id)===String(id));if(o)o.status=status;render()}catch(e){alert('Erro ao atualizar status: '+e.message)}}
-function printOrder(id){const o=orders.find(x=>String(x.id)===String(id));if(!o)return;const items=(o.order_items||[]).map(i=>`<tr><td>${i.qty}x</td><td>${i.name}</td><td>${money(Number(i.price)*Number(i.qty))}</td></tr>`).join('');const w=open('','_blank','width=360,height=640');w.document.write(`<html><head><meta charset="UTF-8"><style>@page{size:80mm auto;margin:0}body{font-family:Arial;color:#000;padding:8px;width:72mm}h2{text-align:center}td{border-bottom:1px dashed #999;padding:4px;font-size:12px}</style></head><body><h2>La Casa da Pizza</h2><p><b>Pedido #${o.numero||''}</b><br>${o.data||''} ${o.hora||''}</p><p>${o.cliente||''}<br>${o.endereco||''} - ${o.bairro||''}</p><table width="100%">${items}</table><h3>Total: ${money(o.total)}</h3><p>Pagamento: ${o.pagamento||''}</p></body></html>`);w.document.close();setTimeout(()=>w.print(),300)}
-function renderProdutos(){$('content').innerHTML=`<div class="card"><h2>Novo produto / bebida</h2><div class="row"><input id="pname" placeholder="Nome"><input id="pprice" type="number" step="0.5" placeholder="Preço"><select id="pcat"><option>Bebida</option><option>Pizza Preco</option><option>Pizza</option></select><button class="btn" onclick="addProduct()">Adicionar</button></div></div><div class="card"><h2>Produtos</h2><table class="table"><thead><tr><th>Nome</th><th>Categoria</th><th>Preço</th><th>Ativo</th><th>Ação</th></tr></thead><tbody>${products.map(p=>`<tr><td>${p.name}</td><td>${p.category}</td><td>${money(p.price)}</td><td>${p.active===false?'Não':'Sim'}</td><td><button class="btn secondary" onclick="toggleProduct('${p.id}',${p.active===false})">${p.active===false?'Ativar':'Inativar'}</button></td></tr>`).join('')}</tbody></table></div>`}
-async function addProduct(){const name=$('pname').value.trim(),price=Number($('pprice').value),category=$('pcat').value;if(!name||isNaN(price))return alert('Preencha nome e preço.');await api('/rest/v1/products',{method:'POST',headers:headers(true,{Prefer:'return=minimal'}),body:JSON.stringify({name,price,category,active:true})});await loadProducts();render()}
-async function toggleProduct(id,active){await api('/rest/v1/products?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:headers(true,{Prefer:'return=minimal'}),body:JSON.stringify({active})});await loadProducts();render()}
-function renderBairros(){$('content').innerHTML=`<div class="card"><h2>Novo bairro</h2><div class="row"><input id="bname" placeholder="Nome do bairro"><input id="btaxa" type="number" step="0.5" placeholder="Taxa"><button class="btn" onclick="addBairro()">Adicionar</button></div></div><div class="card"><h2>Bairros</h2><table class="table"><thead><tr><th>Nome</th><th>Taxa</th><th>Ativo</th><th>Ação</th></tr></thead><tbody>${bairros.map(b=>`<tr><td>${b.name}</td><td>${money(b.taxa)}</td><td>${b.active===false?'Não':'Sim'}</td><td><button class="btn secondary" onclick="toggleBairro('${b.id}',${b.active===false})">${b.active===false?'Ativar':'Inativar'}</button></td></tr>`).join('')}</tbody></table></div>`}
-async function addBairro(){const name=$('bname').value.trim(),taxa=Number($('btaxa').value);if(!name||isNaN(taxa))return alert('Preencha nome e taxa.');await api('/rest/v1/bairros',{method:'POST',headers:headers(true,{Prefer:'return=minimal'}),body:JSON.stringify({name,taxa,active:true})});await loadBairros();render()}
-async function toggleBairro(id,active){await api('/rest/v1/bairros?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:headers(true,{Prefer:'return=minimal'}),body:JSON.stringify({active})});await loadBairros();render()}
-function renderFuncionamento(){const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];const closed=Array.isArray(settings.closed_days)?settings.closed_days.map(Number):[];$('content').innerHTML=`<div class="card"><h2>Funcionamento</h2><p class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></p><button class="btn ${settings.manual_closed?'green':'danger'}" onclick="toggleClosed()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button><h2 style="margin-top:18px">Dias fechados</h2>${dias.map((d,i)=>`<label style="display:block;margin:8px 0"><input type="checkbox" ${closed.includes(i)?'checked':''} onchange="setDay(${i},this.checked)"> ${d}</label>`).join('')}</div>`}
-async function saveSettings(){await refresh();await api('/rest/v1/store_settings?on_conflict=key',{method:'POST',headers:headers(true,{Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify([{key:'status',value:settings}])})}
-async function toggleClosed(){settings.manual_closed=!settings.manual_closed;await saveSettings();render()}
-async function setDay(day,checked){let arr=Array.isArray(settings.closed_days)?settings.closed_days.map(Number):[];if(checked&&!arr.includes(day))arr.push(day);if(!checked)arr=arr.filter(x=>x!==day);settings.closed_days=arr;await saveSettings();render()}
-window.addEventListener('load',async()=>{try{session=JSON.parse(localStorage.getItem(AUTH_KEY)||'null')}catch(e){} if(session&&await refresh()){showApp();await loadAll();render()} });
-setInterval(()=>{if(session)loadOrders().then(()=>{if(current==='pedidos'||current==='dashboard')render()}).catch(()=>{})},10000);
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let current='dashboard';
+let session=null;
+let orders=[];
+let products=[];
+let bairros=[];
+let settings={manual_closed:false,closed_days:[]};
+
+const pages=[
+  ['dashboard','📊 Dashboard','Resumo geral'],
+  ['pedidos','📦 Pedidos','Pedidos recebidos pelo site'],
+  ['produtos','🍕 Produtos','Preços e produtos'],
+  ['bebidas','🥤 Bebidas','Cadastro de bebidas'],
+  ['bairros','🛵 Bairros','Taxas de entrega'],
+  ['funcionamento','🕒 Funcionamento','Abrir, fechar e dias de folga']
+];
+
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function setMsg(text){
+  const el=$('loginMsg');
+  el.textContent=text||'';
+  el.classList.toggle('hidden',!text);
+}
+
+function renderNav(){
+  const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+  $('sideNav').innerHTML=html;
+  $('mobileNav').innerHTML=html;
+}
+
+function go(page){
+  current=page;
+  const p=pages.find(x=>x[0]===page)||pages[0];
+  $('pageTitle').textContent=p[1].replace(/[^\wÀ-ÿ\s]/g,'').trim();
+  $('pageSubtitle').textContent=p[2];
+  renderNav();
+  render();
+}
+
+async function login(e){
+  e.preventDefault();
+  setMsg('');
+  $('loginBtn').disabled=true;
+  $('loginBtn').textContent='Entrando...';
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  $('loginBtn').textContent='Entrar';
+  if(error){setMsg('Email ou senha inválidos.');return;}
+  session=data.session;
+  await start();
+}
+
+async function logout(){
+  await db.auth.signOut();
+  session=null;
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
+}
+
+async function start(){
+  $('loginScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  renderNav();
+  await loadAll();
+  go('dashboard');
+}
+
+async function loadAll(){
+  try{
+    const [ordersRes, productsRes, bairrosRes, settingsRes]=await Promise.all([
+      db.from('orders').select('*,order_items(*)').order('created_at',{ascending:false}).limit(100),
+      db.from('products').select('*').order('category').order('name'),
+      db.from('bairros').select('*').order('name'),
+      db.from('store_settings').select('*').eq('key','status').maybeSingle()
+    ]);
+    if(ordersRes.error) throw ordersRes.error;
+    if(productsRes.error) throw productsRes.error;
+    if(bairrosRes.error) throw bairrosRes.error;
+    orders=ordersRes.data||[];
+    products=productsRes.data||[];
+    bairros=bairrosRes.data||[];
+    if(settingsRes.data?.value) settings=Object.assign({manual_closed:false,closed_days:[]},settingsRes.data.value);
+    render();
+  }catch(err){
+    console.error(err);
+    $('content').innerHTML='<div class="notice">Erro ao carregar dados: '+esc(err.message||err)+'</div>';
+  }
+}
+
+function render(){
+  if(current==='dashboard') return renderDashboard();
+  if(current==='pedidos') return renderPedidos();
+  if(current==='produtos') return renderProducts('Pizza Preco');
+  if(current==='bebidas') return renderProducts('Bebida');
+  if(current==='bairros') return renderBairros();
+  if(current==='funcionamento') return renderFuncionamento();
+}
+
+function renderDashboard(){
+  const hoje=orders.filter(o=>o.data===today());
+  const faturamentoHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);
+  const novos=orders.filter(o=>o.status==='novo').length;
+  const entreguesHoje=hoje.filter(o=>o.status==='entregue').length;
+  const ticket=hoje.length?faturamentoHoje/hoje.length:0;
+  const top={};
+  orders.forEach(o=>(o.order_items||[]).forEach(i=>{top[i.name]=(top[i.name]||0)+Number(i.qty||0)}));
+  const topList=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  $('content').innerHTML=`
+    <div class="grid">
+      <div class="card"><div class="stat-label">Pedidos hoje</div><div class="stat-value">${hoje.length}</div></div>
+      <div class="card"><div class="stat-label">Faturamento hoje</div><div class="stat-value">${money(faturamentoHoje)}</div></div>
+      <div class="card"><div class="stat-label">Pedidos novos</div><div class="stat-value">${novos}</div></div>
+      <div class="card"><div class="stat-label">Ticket médio</div><div class="stat-value">${money(ticket)}</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Mais vendidos</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>
+      ${topList.length?topList.map(([name,qty])=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>${esc(name)}</span><strong>${qty}x</strong></div>`).join(''):'<div class="notice">Ainda não há itens vendidos.</div>'}
+    </div>`;
+}
+
+function renderPedidos(){
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title">
+        <h2>Pedidos</h2>
+        <div class="row">
+          <select class="select" id="filterStatus" style="width:auto" onchange="renderPedidosList()">
+            <option value="">Todos</option>
+            <option value="novo">Novo</option>
+            <option value="preparando">Preparando</option>
+            <option value="entregue">Entregue</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+          <button class="btn small secondary" onclick="loadAll()">Atualizar</button>
+        </div>
+      </div>
+      <div id="ordersArea"></div>
+    </div>`;
+  renderPedidosList();
+}
+
+function renderPedidosList(){
+  const status=$('filterStatus')?.value||'';
+  const list=status?orders.filter(o=>o.status===status):orders;
+  $('ordersArea').innerHTML=list.length?list.map(o=>{
+    const items=(o.order_items||[]).map(i=>`${Number(i.qty||0)}x ${esc(i.name)} - ${money(Number(i.qty||0)*Number(i.price||0))}`).join('<br>');
+    return `<div class="order-card">
+      <div>
+        <strong>Pedido #${esc(o.numero||String(o.id).slice(0,8))}</strong>
+        <div class="order-meta">${esc(o.data||'')} ${esc(o.hora||'')}<br>${esc(o.cliente||'Cliente não informado')}</div>
+      </div>
+      <div>
+        <div class="order-meta">${esc(o.endereco||'')} - ${esc(o.bairro||'')}</div>
+        <div class="items">${items||'Sem itens cadastrados'}</div>
+        <div class="order-meta">Pagamento: ${esc(o.pagamento||'')} · Taxa: ${money(o.taxa)} · Total: <b>${money(o.total)}</b></div>
+      </div>
+      <div>
+        <span class="badge ${esc(o.status||'novo')}">${esc(o.status||'novo')}</span>
+        <div style="height:8px"></div>
+        <select class="select" onchange="updateStatus('${esc(o.id)}',this.value)">
+          ${['novo','preparando','entregue','cancelado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <div style="height:8px"></div>
+        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Imprimir</button>
+      </div>
+    </div>`;
+  }).join(''):'<div class="notice">Nenhum pedido encontrado.</div>';
+}
+
+async function updateStatus(id,status){
+  const {error}=await db.from('orders').update({status}).eq('id',id);
+  if(error){alert('Erro ao atualizar status: '+error.message);return;}
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(o) o.status=status;
+  renderPedidosList();
+}
+
+function printOrder(id){
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(!o) return;
+  const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  body{font-family:Arial;color:#000;width:72mm;padding:8px}h1{text-align:center;font-size:17px}td{border-bottom:1px dashed #999;padding:5px;font-size:12px}table{width:100%;border-collapse:collapse}.total{text-align:right;font-size:16px;font-weight:bold}
+  </style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+function renderProducts(category){
+  const isBebida=category==='Bebida';
+  const list=products.filter(p=>p.category===category);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>${isBebida?'Bebidas':'Preços de Pizza'}</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="${isBebida?'Refrigerante 2L':'preco_trad_media'}"></div>
+        <div class="field"><label>Preço</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button class="btn" onclick="addProduct('${category}')">Adicionar</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Nome</th><th>Preço</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td><input class="input" id="name-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="price-${esc(p.id)}" type="number" step="0.01" value="${Number(p.price||0)}"></td>
+          <td>${p.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveProduct('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addProduct(category){
+  const name=$('prodName').value.trim();
+  const price=Number($('prodPrice').value||0);
+  if(!name){alert('Digite o nome.');return;}
+  const {error}=await db.from('products').insert({name,price,category,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveProduct(id){
+  const name=$('name-'+id).value.trim();
+  const price=Number($('price-'+id).value||0);
+  const {error}=await db.from('products').update({name,price,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleProduct(id,active){
+  const {error}=await db.from('products').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderBairros(){
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Novo bairro</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div>
+        <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div>
+      </div>
+      <button class="btn" onclick="addBairro()">Adicionar bairro</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${bairros.map(b=>`<tr>
+          <td><input class="input" id="bname-${esc(b.id)}" value="${esc(b.name)}"></td>
+          <td><input class="input" id="btaxa-${esc(b.id)}" type="number" step="0.01" value="${Number(b.taxa||0)}"></td>
+          <td>${b.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveBairro('${esc(b.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleBairro('${esc(b.id)}',${b.active===false?'true':'false'})">${b.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addBairro(){
+  const name=$('bairroName').value.trim();
+  const taxa=Number($('bairroTaxa').value||0);
+  if(!name){alert('Digite o bairro.');return;}
+  const {error}=await db.from('bairros').insert({name,taxa,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveBairro(id){
+  const name=$('bname-'+id).value.trim();
+  const taxa=Number($('btaxa-'+id).value||0);
+  const {error}=await db.from('bairros').update({name,taxa,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleBairro(id,active){
+  const {error}=await db.from('bairros').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderFuncionamento(){
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const closed=(settings.closed_days||[]).map(Number);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Status da loja</h2></div>
+      <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div>
+      <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Dias sem funcionamento</h2></div>
+      <div class="form-grid">
+        ${days.map((d,i)=>`<label class="notice" style="margin:0"><input type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}</label>`).join('')}
+      </div>
+    </div>`;
+}
+
+async function saveSettings(){
+  const {error}=await db.from('store_settings').upsert({key:'status',value:settings,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if(error){alert('Erro: '+error.message);return;}
+}
+
+async function toggleStore(){
+  settings.manual_closed=!settings.manual_closed;
+  await saveSettings();
+  renderFuncionamento();
+}
+
+async function saveClosedDays(){
+  settings.closed_days=[...document.querySelectorAll('input[type=checkbox]:checked')].map(i=>Number(i.value));
+  await saveSettings();
+}
+
+async function init(){
+  const {data}=await db.auth.getSession();
+  session=data.session;
+  if(session) await start();
+}
+init();
 </script>
 </body>
 </html>
