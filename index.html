@@ -1,926 +1,1764 @@
+
+
+Código colado.html
+Arquivo
+faca com que esso codigo salve os pedidos feito pelo site 
+
+
+Código colado(1).html
+Arquivo
+faça a alteraçao
+
+
+Texto colado.txt
+Documento
+quando eu tava usando esse codigo no admin estava salvaando
+
+essas linhas vermelhas no git e algum problema
+
+
+essas sao policies 
+
+ta tudo certo?
+
+
+Texto colado(1).txt
+Documento
+ faça a alteraçao
+
+
+Código colado(2).html
+Arquivo
+atualize
+
+image(1).png
+tipo essas
+
+
+Texto colado(2).txt
+Documento
+use esse codigo e simplesmente faça as alteraçores
+
+Aumentei os espaços entre:
+
+endereço;
+
+itens;
+
+taxa de entrega;
+
+total;
+
+linhas do cupom.
+
+Ficou mais confortável de ler na impressora térmica.
+
+Baixar versão com impressão mais espaçada 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Admin La Casa da Pizza</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#100704">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="La Casa Admin">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Nunito',sans-serif;background:#1a0a00;color:#fff2e6;min-height:100vh}
-.header{background:linear-gradient(135deg,#8b1a00,#c0392b);padding:24px 16px;text-align:center;position:relative;overflow:hidden}
-.header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");background-size:40px}
-.logo-badge{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;background:#fff;border-radius:50%;margin-bottom:10px;box-shadow:0 4px 20px rgba(0,0,0,0.4);position:relative}
-.logo-badge svg{width:50px;height:50px}
-.header h1{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,0.4);position:relative}
-.header p{font-size:12px;color:#ffcdb0;margin-top:4px;letter-spacing:2px;text-transform:uppercase;position:relative}
-.tabs{display:flex;background:#2d1200;border-bottom:2px solid #8b1a00;overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:12px 18px;font-size:13px;font-weight:700;color:#c0856a;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;transition:all 0.2s;letter-spacing:0.5px}
-.tab.active{color:#ff6b3d;border-bottom-color:#ff6b3d}
-.content{padding:16px;max-width:720px;margin:0 auto}
-.section-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#ff6b3d;margin:16px 0 10px;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:8px}
-.section-title::after{content:'';flex:1;height:1px;background:rgba(255,107,61,0.3)}
-.sizes-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.size-btn{flex:1;min-width:70px;padding:8px 4px;background:#2d1200;border:1.5px solid #5a2400;border-radius:10px;cursor:pointer;text-align:center;transition:all 0.2s;color:#ffcdb0}
-.size-btn.selected{background:#8b1a00;border-color:#ff6b3d;color:#fff}
-.size-btn .sz-name{font-size:11px;font-weight:700;letter-spacing:1px}
-.size-btn .sz-slices{font-size:10px;color:#c0856a;margin:2px 0}
-.size-btn.selected .sz-slices{color:#ffcdb0}
-.size-btn .sz-price{font-size:14px;font-weight:700;color:#ff6b3d}
-.pizza-card{background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;transition:all 0.2s}
-.pizza-card:hover{border-color:#ff6b3d;background:#3d1a00}
-.pizza-info{min-width:0}
-.pizza-info .pizza-name{font-size:14px;font-weight:700;color:#fff2e6}
-.pizza-info .pizza-desc{font-size:11px;color:#a06040;margin-top:2px;line-height:1.4}
-.add-btn{width:32px;height:32px;background:#8b1a00;border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
-.add-btn:hover{background:#c0392b;transform:scale(1.1)}
-.add-btn.in-cart{background:#ff6b3d}
-.pizza-builder{background:#231000;border:1px solid #5a2400;border-radius:12px;padding:10px 12px;margin:0 0 12px;color:#ffcdb0}
-.builder-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:#c0856a;margin-bottom:8px}
-.builder-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.builder-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;background:#4a1500;border:1px solid #ff6b3d;border-radius:999px;color:#fff2e6;font-size:12px;font-weight:700;padding:6px 9px}
-.builder-chip button{background:transparent;border:none;color:#ffcdb0;font-size:14px;line-height:1;cursor:pointer}
-.builder-actions{display:flex;gap:8px}
-.builder-actions button{border:none;border-radius:10px;padding:9px 10px;font-size:12px;font-weight:800;cursor:pointer}
-.builder-add{flex:1;background:#ff6b3d;color:#fff}
-.builder-clear{background:#5a2400;color:#fff2e6}
-.builder-actions button:disabled{opacity:.45;cursor:not-allowed}
-.border-section{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.border-opt{background:#2d1200;border:1.5px solid #5a2400;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.2s}
-.border-opt:hover{border-color:#ff6b3d}
-.border-opt.selected{border-color:#ff6b3d;background:#3d1a00}
-.border-opt .b-name{font-size:12px;font-weight:700;color:#fff2e6}
-.border-opt .b-price{font-size:11px;color:#ff6b3d;margin-top:2px}
-.cart-panel{background:#2d1200;border-top:2px solid #5a2400;padding:10px 12px;position:sticky;bottom:0;max-height:38vh;overflow-y:auto}
-.cart-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:#ff6b3d;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.cart-badge{background:#ff6b3d;color:#fff;border-radius:50%;width:20px;height:20px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.cart-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #3d1a00;font-size:12px;gap:8px}
-.cart-item:last-child{border-bottom:none}
-.ci-name{color:#fff2e6;font-weight:600;flex:1;min-width:0}
-.ci-qty{display:flex;align-items:center;gap:6px;color:#c0856a}
-.ci-qty button{background:#5a2400;border:none;color:#fff;width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
-.ci-qty button:hover{background:#8b1a00}
-.ci-qty span{min-width:14px;text-align:center;font-weight:700;color:#fff}
-.ci-price{color:#ff6b3d;font-weight:700;margin-left:4px;white-space:nowrap}
-.delivery-row{margin-top:8px;display:flex;align-items:center;gap:8px;padding:7px;background:#1a0a00;border-radius:10px}
-.delivery-row label{font-size:13px;color:#c0856a;font-weight:600}
-.delivery-input{background:#2d1200;border:1.5px solid #5a2400;border-radius:8px;padding:6px 10px;color:#fff2e6;font-size:14px;font-family:'Nunito',sans-serif;width:90px;font-weight:700;min-width:0}
-.delivery-input:focus{outline:none;border-color:#ff6b3d}
-.total-row{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:2px solid #5a2400}
-.total-label{font-size:15px;font-weight:700;color:#c0856a}
-.total-value{font-family:'Playfair Display',serif;font-size:23px;font-weight:900;color:#ff6b3d}
-.checkout-btn{width:100%;margin-top:10px;padding:12px;background:linear-gradient(135deg,#c0392b,#ff6b3d);border:none;border-radius:14px;color:#fff;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;letter-spacing:1px;transition:all 0.2s;box-shadow:0 4px 16px rgba(192,57,43,0.4)}
-.checkout-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,57,43,0.5)}
-.checkout-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
-.promo-banner{background:linear-gradient(135deg,#7b4a00,#c07800);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center}
-.store-status{background:#3b140c;border:1px solid #8b1a00;border-radius:12px;padding:10px 14px;margin-bottom:14px;color:#ffd0c0;font-size:13px;font-weight:700;display:none}
-.promo-icon{font-size:28px;flex-shrink:0}
-.promo-text p{font-size:12px;font-weight:700;color:#ffe0a0;letter-spacing:1px;text-transform:uppercase}
-.promo-text h3{font-size:15px;font-weight:900;color:#fff;line-height:1.2}
-.promo-text small{font-size:11px;color:#ffcf7a}
-.empty-cart{text-align:center;color:#5a2400;font-size:13px;padding:8px 0}
-.tab-content{display:none}
-.tab-content.active{display:block}
-@media (max-width:520px){
-  .delivery-input{font-size:13px}
-  #addr-street{width:42%!important}
-  #addr-number{width:22%!important}
-  #addr-neighborhood-search{width:32%!important}
-  .cart-panel{max-height:36vh}
+:root{
+  --bg:#100704;
+  --panel:#1c0d08;
+  --panel2:#27120b;
+  --line:#3b1b10;
+  --text:#fff4e8;
+  --muted:#c99f7c;
+  --brand:#ff6b35;
+  --brand2:#ffb45c;
+  --green:#2ecc71;
+  --blue:#3498db;
+  --red:#e74c3c;
+  --yellow:#f39c12;
 }
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#100704,#210b05);
+  color:var(--text);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.login-box{
+  width:100%;
+  max-width:390px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 24px 80px rgba(0,0,0,.35);
+}
+.login-box h1{margin:0 0 8px;color:var(--brand2);font-size:28px}
+.login-box p{margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.4}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.field label{font-size:12px;color:var(--brand2);font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.input, .select, textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#120804;
+  color:var(--text);
+  border-radius:14px;
+  padding:12px;
+  outline:none;
+}
+.input:focus,.select:focus,textarea:focus{border-color:var(--brand)}
+.btn{
+  border:0;
+  border-radius:14px;
+  padding:11px 14px;
+  background:var(--brand);
+  color:#160801;
+  font-weight:800;
+}
+.btn.secondary{background:#35190f;color:var(--text);border:1px solid var(--line)}
+.btn.green{background:var(--green);color:#071b0d}
+.btn.blue{background:var(--blue);color:#061019}
+.btn.red{background:var(--red);color:#fff}
+.btn.small{padding:7px 10px;border-radius:10px;font-size:12px}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+}
+.sidebar{
+  background:rgba(18,8,4,.94);
+  border-right:1px solid var(--line);
+  padding:18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.logo-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  font-size:24px;
+}
+.logo h2{margin:0;color:var(--brand2);font-size:18px}
+.logo span{font-size:12px;color:var(--muted)}
+.nav{display:flex;flex-direction:column;gap:8px}
+.nav button{
+  text-align:left;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid transparent;
+  border-radius:14px;
+  padding:12px;
+  font-weight:700;
+}
+.nav button.active{
+  background:var(--panel2);
+  color:var(--text);
+  border-color:var(--line);
+}
+.nav-footer{
+  position:absolute;
+  left:18px;right:18px;bottom:18px;
+}
+.main{
+  padding:22px;
+  max-width:1200px;
+  width:100%;
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  margin-bottom:20px;
+}
+.topbar h1{margin:0;color:var(--brand2);font-size:26px}
+.topbar p{margin:5px 0 0;color:var(--muted)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:18px;
+}
+.card{
+  background:rgba(28,13,8,.92);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:18px;
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.stat-value{font-size:26px;color:var(--brand2);font-weight:900}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.section-title h2{margin:0;color:var(--brand2);font-size:20px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th,td{padding:11px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+th{color:var(--brand2);font-size:12px;text-transform:uppercase;letter-spacing:.7px}
+td{color:#ffe8d5}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:12px;
+  font-weight:800;
+  background:#32170e;
+  border:1px solid var(--line);
+}
+.badge.novo{color:var(--yellow)}
+.badge.preparando{color:var(--blue)}
+.badge.entregue{color:var(--green)}
+.badge.cancelado{color:var(--red)}
+.order-card{
+  display:grid;
+  grid-template-columns:1.2fr 1fr auto;
+  gap:14px;
+  padding:14px;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  margin-bottom:10px;
+}
+.order-card strong{color:var(--brand2)}
+.order-meta{font-size:13px;color:var(--muted);line-height:1.5}
+.items{font-size:13px;line-height:1.5;color:#ffe8d5}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.notice{
+  background:#2c140c;
+  border:1px solid var(--line);
+  color:#ffd7b5;
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:14px;
+  font-size:14px;
+}
+.tabs-mobile{display:none}
+@media(max-width:850px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:14px}
+  .tabs-mobile{
+    display:flex;
+    position:sticky;
+    top:0;
+    z-index:5;
+    gap:8px;
+    overflow-x:auto;
+    background:#100704;
+    padding:10px 0;
+    margin-bottom:12px;
+  }
+  .tabs-mobile button{
+    white-space:nowrap;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 12px;
+    font-weight:800;
+  }
+  .tabs-mobile button.active{background:var(--brand);color:#160801}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .order-card{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+}
+
+.printer-panel{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
+
+
+/* ===== AJUSTE SEGURO: APARENCIA DE APP NO CELULAR ===== */
+@media(max-width:850px){
+  body{
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .app{
+    grid-template-columns:1fr!important;
+  }
+  .sidebar{
+    display:none!important;
+  }
+  .main{
+    max-width:100%!important;
+    width:100%!important;
+    padding:12px!important;
+  }
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:rgba(16,7,4,.96);
+    padding:10px 0;
+    margin-bottom:8px;
+    backdrop-filter:blur(10px);
+  }
+  .topbar h1{
+    font-size:21px!important;
+  }
+  .topbar p{
+    font-size:12px!important;
+  }
+  .tabs-mobile{
+    display:flex!important;
+    position:sticky;
+    top:74px;
+    z-index:39;
+    gap:8px;
+    overflow-x:auto;
+    background:rgba(16,7,4,.96);
+    padding:8px 0 10px;
+    margin-bottom:12px;
+    scrollbar-width:none;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none}
+  .tabs-mobile button{
+    white-space:nowrap;
+    min-height:42px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 13px;
+    font-weight:900;
+    font-size:13px;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    color:#160801;
+  }
+  .grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+  }
+  .card{
+    border-radius:18px!important;
+    padding:14px!important;
+  }
+  .order-card{
+    grid-template-columns:1fr!important;
+    padding:13px!important;
+  }
+  .form-grid{
+    grid-template-columns:1fr!important;
+  }
+  .btn{
+    min-height:46px;
+    border-radius:14px;
+  }
+  .btn.small{
+    min-height:38px;
+    font-size:13px;
+  }
+  .input,.select,textarea{
+    min-height:46px;
+    font-size:16px;
+  }
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr!important}
+}
+.install-fab{
+  position:fixed;
+  right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:9999;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+  font-weight:900;
+  padding:14px 18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.45);
+  display:none;
+}
+.install-fab.show{display:block}
+.install-card{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  z-index:9998;
+  background:#160904;
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 38px rgba(0,0,0,.5);
+  display:none;
+  font-size:15px;
+  line-height:1.45;
+}
+.install-card.show{display:block}
+.install-card strong{color:var(--brand2)}
+.install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+
+/* ===== CORRECAO BOTAO INSTALAR ===== */
+@media(max-width:850px){
+  #installBtn{
+    display:block!important;
+  }
+}
+.install-fab{
+  display:block;
+}
+
+
+/* ===== CORRECAO NAVEGACAO MOBILE ===== */
+@media(max-width:850px){
+  .topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    padding:12px 0 10px!important;
+    margin-bottom:10px!important;
+  }
+  .tabs-mobile{
+    display:grid!important;
+    grid-template-columns:repeat(6,auto);
+    gap:6px!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    top:auto!important;
+    z-index:9997!important;
+    background:#100704!important;
+    border-top:1px solid var(--line)!important;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+    box-shadow:0 -10px 30px rgba(0,0,0,.35)!important;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{
+    min-width:84px!important;
+    min-height:50px!important;
+    white-space:normal!important;
+    text-align:center!important;
+    border-radius:14px!important;
+    padding:7px 8px!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+    border:1px solid var(--line)!important;
+    background:var(--panel)!important;
+    color:var(--muted)!important;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2))!important;
+    color:#160801!important;
+  }
+  .main{
+    padding-bottom:96px!important;
+  }
+  .topbar .row{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .topbar{
+    flex-direction:column;
+    gap:8px;
+  }
+  .install-fab{
+    bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  }
+  .install-card{
+    bottom:calc(148px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media(max-width:390px){
+  .tabs-mobile button{
+    min-width:76px!important;
+    font-size:10.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="logo-badge">
-    <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="25" cy="28" r="18" fill="#c0392b"/>
-      <circle cx="25" cy="28" r="15" fill="#e8c07a"/>
-      <circle cx="25" cy="28" r="11" fill="#e07a40"/>
-      <circle cx="20" cy="24" r="2.5" fill="#c0392b"/>
-      <circle cx="29" cy="26" r="2" fill="#c0392b"/>
-      <circle cx="23" cy="32" r="2" fill="#c0392b"/>
-      <polygon points="25,4 29,14 25,12 21,14" fill="#2d7a2d"/>
-      <rect x="23" y="10" width="4" height="8" rx="2" fill="#3a9a3a"/>
-    </svg>
-  </div>
-  <h1>La Casa da Pizza</h1>
-  <p>Forno a Lenha · Delivery</p>
-</div>
-
-<div class="tabs" id="tabs">
-  <div class="tab active" onclick="switchTab('tradicionais')">Tradicionais</div>
-  <div class="tab" onclick="switchTab('especiais')">Especiais</div>
-  <div class="tab" onclick="switchTab('doces')">Doces</div>
-  <div class="tab" onclick="switchTab('bordas')">Bordas</div>
-  <div class="tab" onclick="switchTab('pedido')">Pedido</div>
-</div>
-
-<div class="content">
-  <div class="promo-banner">
-    <div class="promo-icon">🍕</div>
-    <div class="promo-text">
-      <p>Promoção terça a quinta</p>
-      <h3>Pizza Grande R$ 45 · com Refri R$ 48</h3>
-      <small>Sabores tradicionais · Exceto feriados</small>
+<section id="loginScreen" class="login">
+  <form class="login-box" onsubmit="login(event)">
+    <h1>🍕 La Casa Admin</h1>
+    <p>Painel novo para acompanhar pedidos, dashboard, produtos, bairros, bebidas e funcionamento.</p>
+    <div class="field">
+      <label>Email</label>
+      <input class="input" id="email" type="email" autocomplete="username" required>
     </div>
-  </div>
-  <div class="store-status" id="store-status"></div>
-
-  <div class="tab-content active" id="tab-tradicionais">
-    <div class="section-title">Tamanho</div>
-    <div class="sizes-row" id="sizes-trad">
-      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'trad','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$38</div></div>
-      <div class="size-btn" data-size="grande" onclick="selectSize(this,'trad','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$48</div></div>
-      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'trad','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$58</div></div>
-      <div class="size-btn" data-size="familia" onclick="selectSize(this,'trad','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$68</div></div>
+    <div class="field">
+      <label>Senha</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" required>
     </div>
-    <div class="section-title">Sabores</div>
-    <div class="pizza-builder" id="builder-trad"></div>
-    <div id="list-trad"></div>
-  </div>
+    <button class="btn" id="loginBtn" type="submit" style="width:100%">Entrar</button>
+    <div id="loginMsg" class="notice hidden" style="margin-top:14px"></div>
+  </form>
+</section>
 
-  <div class="tab-content" id="tab-especiais">
-    <div class="section-title">Tamanho</div>
-    <div class="sizes-row" id="sizes-esp">
-      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'esp','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$45</div></div>
-      <div class="size-btn" data-size="grande" onclick="selectSize(this,'esp','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$58</div></div>
-      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'esp','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$65</div></div>
-      <div class="size-btn" data-size="familia" onclick="selectSize(this,'esp','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$78</div></div>
+<section id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">🍕</div>
+      <div><h2>La Casa</h2><span>Painel administrativo</span></div>
     </div>
-    <div class="section-title">Sabores</div>
-    <div class="pizza-builder" id="builder-esp"></div>
-    <div id="list-esp"></div>
-  </div>
-
-  <div class="tab-content" id="tab-doces">
-    <div class="section-title">Tamanho</div>
-    <div class="sizes-row" id="sizes-doce">
-      <div class="size-btn selected" data-size="media" onclick="selectSize(this,'doce','media',null,'Média','4 fatias')"><div class="sz-name">MÉDIA</div><div class="sz-slices">4 fatias</div><div class="sz-price">R$38</div></div>
-      <div class="size-btn" data-size="grande" onclick="selectSize(this,'doce','grande',null,'Grande','6 fatias')"><div class="sz-name">GRANDE</div><div class="sz-slices">6 fatias</div><div class="sz-price">R$48</div></div>
-      <div class="size-btn" data-size="gigante" onclick="selectSize(this,'doce','gigante',null,'Gigante','8 fatias')"><div class="sz-name">GIGANTE</div><div class="sz-slices">8 fatias</div><div class="sz-price">R$58</div></div>
-      <div class="size-btn" data-size="familia" onclick="selectSize(this,'doce','familia',null,'Família','12 fatias')"><div class="sz-name">FAMÍLIA</div><div class="sz-slices">12 fatias</div><div class="sz-price">R$68</div></div>
+    <nav class="nav" id="sideNav"></nav>
+    <div class="nav-footer">
+      <button class="btn secondary" onclick="logout()" style="width:100%">Sair</button>
     </div>
-    <div class="section-title">Sabores Doces</div>
-    <div class="pizza-builder" id="builder-doce"></div>
-    <div id="list-doce"></div>
-  </div>
+  </aside>
 
-  <div id="bebidas-area" style="display:none;margin-top:18px;">
-    <div class="section-title">Bebidas para acompanhar</div>
-    <div style="font-size:13px;color:#7a4030;margin-bottom:10px">Escolha uma bebida para completar seu pedido de pizza.</div>
-    <div id="list-bebidas-suggest"></div>
-  </div>
+  <main class="main">
+    <div class="tabs-mobile" id="mobileNav"></div>
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Resumo geral da pizzaria.</p>
+      </div>
+      <div class="row">
+        <button class="btn secondary" onclick="loadAll()">Atualizar</button>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</section>
 
-  <div class="tab-content" id="tab-bordas">
-    <div class="section-title">Escolha a borda recheada</div>
-    <div class="border-section" id="bordas-grid"></div>
-    <p style="font-size:12px;color:#7a4030;text-align:center;margin-top:8px">Bordas têm custo adicional de R$5,00</p>
-  </div>
 
-  <div class="tab-content" id="tab-pedido">
-    <div id="cart-summary"></div>
+<button id="installBtn" class="install-fab show" onclick="installApp()">📲 Instalar</button>
+<div id="installCard" class="install-card">
+  <strong>Instalar o painel no aparelho</strong><br>
+  <span id="installText">Android: toque em Instalar. iPhone: Compartilhar → Adicionar à Tela de Início.</span>
+  <div class="install-actions">
+    <button class="btn small" onclick="installApp()">Instalar agora</button>
+    <button class="btn small secondary" onclick="hideInstallCard()">Fechar</button>
   </div>
 </div>
 
-<div class="cart-panel">
-  <div class="cart-title">
-    Meu Pedido <div class="cart-badge" id="cart-count">0</div>
-  </div>
-  <div id="cart-items-mini"></div>
-  <div class="delivery-row" style="flex-wrap:wrap;gap:8px">
-    <label style="flex-basis:100%">Cliente:</label>
-    <input class="delivery-input" type="text" placeholder="Nome do cliente" id="customer-name" oninput="updateTotals()" style="width:100%">
-  </div>
-  <div class="delivery-row" id="address-row" style="flex-wrap:wrap;gap:8px">
-    <label style="flex-basis:100%">Endereço:</label>
-    <input class="delivery-input" type="text" placeholder="Rua" id="addr-street" oninput="updateTotals()" style="width:45%">
-    <input class="delivery-input" type="text" placeholder="Número" id="addr-number" oninput="updateTotals()" style="width:20%">
-    <input class="delivery-input" type="text" placeholder="Digite o bairro" id="addr-neighborhood-search" list="neighborhood-options" oninput="onNeighborhoodInput()" style="width:30%">
-    <datalist id="neighborhood-options"></datalist>
-    <input type="hidden" id="addr-neighborhood" value="">
-    <div id="addr-error" style="color:#ffb0a0;font-size:13px;margin-top:6px;display:none">Preencha nome, rua, número e bairro para entrega.</div>
-  </div>
-  <div class="delivery-row" style="margin-top:8px;align-items:center">
-    <label>Taxa de entrega:</label>
-    <div style="display:flex;align-items:center;gap:4px"><span style="color:#ff6b3d;font-weight:700">R$</span>
-    <input class="delivery-input" type="number" min="0" step="0.5" placeholder="0,00" id="delivery-fee" readonly></div>
-  </div>
-  <div class="delivery-row" style="margin-top:8px;align-items:center">
-    <label>Borda recheada:</label>
-    <select class="delivery-input" id="addr-borda" onchange="selectBordaByIndex(this.value)" style="width:60%">
-      <option value="">Sem borda</option>
-    </select>
-  </div>
-  <div class="delivery-row" style="margin-top:8px;align-items:center">
-    <label>Forma de pagamento:</label>
-    <select class="delivery-input" id="payment-method" onchange="updateTotals()" style="width:60%">
-      <option value="">Selecione</option>
-      <option value="Dinheiro">Dinheiro</option>
-      <option value="Cartão no entregador">Cartão no entregador</option>
-      <option value="PIX">PIX</option>
-    </select>
-  </div>
-  <div class="total-row">
-    <span class="total-label">Total</span>
-    <span class="total-value" id="total-display">R$ 0,00</span>
-  </div>
-  <button class="checkout-btn" id="checkout-btn" onclick="sendToWhatsapp()" disabled>Finalizar Pedido</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const PIZZAS_TRAD=[
-  {name:'Calabresa',desc:'Mussarela e Calabresa'},
-  {name:'Humita',desc:'Mussarela e Milho'},
-  {name:'Mista',desc:'Mussarela, Apresentado e Calabresa'},
-  {name:'Napolitana',desc:'Mussarela, Tomate e Parmesão'},
-  {name:'Portuguesa',desc:'Mussarela, Apresentado, Ovo, Pimentão, Cebola e Azeitona'},
-  {name:'Apresentado',desc:'Mussarela e Apresentado'},
-  {name:'Italiana',desc:'Mussarela, Apresentado, Milho e Requeijão tipo Catupiry'},
-  {name:'Mussarela',desc:'Mussarela'},
-  {name:'Montes Claros',desc:'Mussarela, Apresentado, Milho, Cebola, Pimentão e Tomate'},
-  {name:'A Moda',desc:'Mussarela, Calabresa, Apresentado, Cebola, Pimentão e Tomate'},
-  {name:'Marguerita',desc:'Mussarela, Tomate e Manjericão seco'},
-  {name:'Calabresa à Francesa',desc:'Mussarela, Calabresa e Creme de Leite'}
-];
-const PIZZAS_ESP=[
-  {name:'Du Cheff',desc:'Mussarela, Milho, Bacon, Calabresa, Cebola e Azeitona'},
-  {name:'Vegetariana',desc:'Mussarela, Palmito, Milho, Tomate, Ervilha e Azeitona'},
-  {name:'Atum',desc:'Mussarela e Atum'},
-  {name:'Bacon',desc:'Mussarela e Bacon'},
-  {name:'La Casa',desc:'Mussarela, Apresentado, Frango, Tomate, Cebola e Azeitona'},
-  {name:'Da Casa',desc:'Mussarela, Calabresa, Milho, Ervilha, Ovos e Tomate'},
-  {name:'Frango',desc:'Mussarela, Frango desfiado'},
-  {name:'Frango Catupiry',desc:'Mussarela, Frango e Requeijão tipo Catupiry'},
-  {name:'Frango com Milho',desc:'Mussarela, Frango desfiado e Milho'},
-  {name:'Carijó',desc:'Mussarela, Frango, Milho e Requeijão tipo catupiry'},
-  {name:'Caipira',desc:'Mussarela, Frango, Calabresa e Milho'},
-  {name:'Quatro Queijos',desc:'Mussarela, Requeijão tipo Catupiry, Parmesão e Provolone'},
-  {name:'Especial',desc:'Mussarela, Calabresa, Milho, Palmito, Frango, Bacon, Cebola e Pimentão'},
-  {name:'Florença',desc:'Mussarela, Frango, Bacon, Cheddar e Batata palha'},
-  {name:'Frango à Bolonhesa',desc:'Mussarela, Frango e Molho à bolonhesa'},
-  {name:'Lombo c/ Catupiry',desc:'Mussarela, Lombinho e Requeijão tipo catupiry'},
-  {name:'Carne de Sol',desc:'Mussarela, Carne de Sol e Cebola'},
-  {name:'Peito de Peru à Francesa',desc:'Mussarela, Peito de Peru e Creme de leite'},
-  {name:'Palmito à Bolonhesa',desc:'Mussarela, Palmito e Molho à Bolonhesa'},
-  {name:'Palmito',desc:'Mussarela, Palmito'},
-  {name:'Lombo Prime',desc:'Mussarela, Lombinho, Cheddar e Bacon'}
-];
-const PIZZAS_DOCE=[
-  {name:'Banana',desc:'Mussarela, Leite condensado, Banana e Canela'},
-  {name:'Romeu e Julieta',desc:'Mussarela e Goiabada'},
-  {name:'Prestígio',desc:'Mussarela, Prestígio e Chocolate'},
-  {name:'Brigadeiro',desc:'Mussarela, Chocolate e Granulado'}
-];
 const SUPABASE_URL='https://kmjbulbsgiptzvhhweau.supabase.co';
 const SUPABASE_KEY='sb_publishable_DqoB81h8n1YjjT6rZpEo1Q_dadcornK';
-const SUPABASE_HEADERS={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
-const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let BEBIDAS=[];
-const BORDAS=[{name:'Catupiry',price:5},{name:'Cheddar',price:5},{name:'Brigadeiro',price:5}];
-let NEIGHBORHOODS=[];
-const PRICES_KEY='pizzaria_prices';
-const PRICES_DEFAULT={
-  trad:{media:38,grande:48,gigante:58,familia:68},
-  esp:{media:45,grande:58,gigante:65,familia:78},
-  doce:{media:38,grande:48,gigante:58,familia:68}
-};
-let PRICES=JSON.parse(JSON.stringify(PRICES_DEFAULT));
-let cart=[];
-let selectedBorda=null;
-let storeSettings={manual_closed:false,closed_days:[]};
-let pizzaSelections={trad:[],esp:[],doce:[]};
-let sizes={
-  trad:{k:'media',price:PRICES.trad.media,name:'Média',slices:'4 fatias'},
-  esp:{k:'media',price:PRICES.esp.media,name:'Média',slices:'4 fatias'},
-  doce:{k:'media',price:PRICES.doce.media,name:'Média',slices:'4 fatias'},
-  bebidas:{k:'unit',price:0,name:'Unidade',slices:''}
-};
+let current='dashboard';
+let session=null;
+let orders=[];
+let products=[];
+let bairros=[];
+let settings={manual_closed:false,closed_days:[]};
 
-function escapeAttr(value){
-  return String(value).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const pages=[
+  ['dashboard','📊 Dashboard','Resumo geral'],
+  ['pedidos','📦 Pedidos','Pedidos recebidos pelo site'],
+  ['produtos','🍕 Produtos','Preços e produtos'],
+  ['bebidas','🥤 Bebidas','Cadastro de bebidas'],
+  ['bairros','🛵 Bairros','Taxas de entrega'],
+  ['funcionamento','🕒 Funcionamento','Abrir, fechar e dias de folga']
+];
+
+const $=id=>document.getElementById(id);
+const money=v=>'R$ '+Number(v||0).toFixed(2).replace('.',',');
+const today=()=>new Date().toISOString().slice(0,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function setMsg(text){
+  const el=$('loginMsg');
+  el.textContent=text||'';
+  el.classList.toggle('hidden',!text);
 }
 
-function isPizzaCategory(cat){
-  return ['trad','esp','doce'].includes(cat);
+function renderNav(){
+  const html=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${p[1]}</button>`).join('');
+  const mobileLabels={
+    dashboard:'📊<br>Dash',
+    pedidos:'📦<br>Pedidos',
+    produtos:'🍕<br>Pizza',
+    bebidas:'🥤<br>Bebidas',
+    bairros:'🛵<br>Bairros',
+    funcionamento:'🕒<br>Loja'
+  };
+  const mobileHtml=pages.map(p=>`<button class="${current===p[0]?'active':''}" onclick="go('${p[0]}')">${mobileLabels[p[0]]||p[1]}</button>`).join('');
+  $('sideNav').innerHTML=html;
+  $('mobileNav').innerHTML=mobileHtml;
 }
 
-function renderList(containerId,items,category){
-  const c=document.getElementById(containerId);
-  c.innerHTML='';
-  items.forEach(p=>{
-    const div=document.createElement('div');
-    div.className='pizza-card';
-    const variantId=p.variants?`variant-${category}-${p.name.replace(/\s+/g,'_').replace(/[^\w-]/g,'')}`:'';
-    const variantHtml=p.variants?`<div style="margin:10px 0"><select class="delivery-input" id="${variantId}" style="width:100%">${p.variants.map(v=>`<option value="${escapeAttr(v)}">${v}</option>`).join('')}</select></div>`:'';
-    const priceArg=category==='bebidas'?`,${Number(p.price)||0}`:'';
-    const variantArg=p.variants?`,document.getElementById('${variantId}').value`:'';
-    div.innerHTML=`<div class="pizza-info"><div class="pizza-name">${p.name}</div><div class="pizza-desc">${p.desc||''}</div>${variantHtml}</div><button class="add-btn" onclick="addToCart('${category}','${escapeAttr(p.name)}','${escapeAttr(p.desc||'')}',event${priceArg}${variantArg})" title="Adicionar">+</button>`;
-    c.appendChild(div);
-  });
+function go(page){
+  current=page;
+  const p=pages.find(x=>x[0]===page)||pages[0];
+  $('pageTitle').textContent=p[1].replace(/[^\wÀ-ÿ\s]/g,'').trim();
+  $('pageSubtitle').textContent=p[2];
+  renderNav();
+  render();
 }
 
-function selectSize(btn,cat,key,price,name,slices){
-  document.querySelectorAll('#sizes-'+cat+' .size-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  let finalPrice=price;
-  if(finalPrice===null||finalPrice===undefined||isNaN(finalPrice)){
-    finalPrice=PRICES[cat]&&PRICES[cat][key]?Number(PRICES[cat][key]):0;
-  }
-  sizes[cat]={k:key,price:finalPrice,name,slices};
-  if(isPizzaCategory(cat)){
-    pizzaSelections[cat]=pizzaSelections[cat].slice(0,getMaxFlavors(cat));
-    renderPizzaBuilder(cat);
-  }
+async function login(e){
+  e.preventDefault();
+  setMsg('');
+  $('loginBtn').disabled=true;
+  $('loginBtn').textContent='Entrando...';
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  $('loginBtn').textContent='Entrar';
+  if(error){setMsg('Email ou senha inválidos.');return;}
+  session=data.session;
+  await start();
 }
 
-async function supabaseGet(table,query=''){
-  const response=await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`,{headers:SUPABASE_HEADERS});
-  if(!response.ok) throw new Error(`Supabase ${table}: ${response.status}`);
-  return response.json();
+async function logout(){
+  await db.auth.signOut();
+  session=null;
+  $('app').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
 }
 
-async function supabaseInsert(table,rows){
-  const response=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{
-    method:'POST',
-    headers:Object.assign({},SUPABASE_HEADERS,{Prefer:'return=minimal'}),
-    body:JSON.stringify(rows)
-  });
-  if(!response.ok){
-    let detail='';
-    try{ detail=await response.text(); }catch(e){}
-    throw new Error(`Supabase insert ${table}: ${response.status} ${detail}`);
-  }
-  return true;
+async function start(){
+  showInstallButton();
+  $('loginScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  renderNav();
+  await loadAll();
+  go('dashboard');
 }
 
-function createOrderId(){
-  if(window.crypto&&crypto.randomUUID) return crypto.randomUUID();
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-    const r=Math.random()*16|0;
-    const v=c==='x'?r:(r&0x3|0x8);
-    return v.toString(16);
-  });
-}
-
-function createOrderNumber(){
-  return 100000+(Date.now()%900000);
-}
-
-function parsePriceProductName(name){
-  const match=String(name||'').match(/^preco_(trad|esp|doce)_(media|grande|gigante|familia)$/);
-  return match?{category:match[1],size:match[2]}:null;
-}
-
-async function loadPrices(){
+async function loadAll(){
   try{
-    const rows=await supabaseGet('products','?select=name,price,category,active&category=eq.Pizza%20Preco&active=eq.true');
-    if(Array.isArray(rows)&&rows.length){
-      const parsed=rows.reduce((acc,row)=>{
-        const key=parsePriceProductName(row.name);
-        if(!key) return acc;
-        if(!acc[key.category]) acc[key.category]={};
-        acc[key.category][key.size]=Number(row.price);
-        return acc;
-      },{});
-      PRICES={
-        trad:Object.assign({},PRICES_DEFAULT.trad,parsed.trad||{}),
-        esp:Object.assign({},PRICES_DEFAULT.esp,parsed.esp||{}),
-        doce:Object.assign({},PRICES_DEFAULT.doce,parsed.doce||{})
-      };
-      localStorage.setItem(PRICES_KEY,JSON.stringify(PRICES));
-      return;
-    }
-  }catch(e){}
-  try{
-    const raw=localStorage.getItem(PRICES_KEY);
-    PRICES=raw?{
-      trad:Object.assign({},PRICES_DEFAULT.trad,(JSON.parse(raw).trad)||{}),
-      esp:Object.assign({},PRICES_DEFAULT.esp,(JSON.parse(raw).esp)||{}),
-      doce:Object.assign({},PRICES_DEFAULT.doce,(JSON.parse(raw).doce)||{})
-    }:JSON.parse(JSON.stringify(PRICES_DEFAULT));
-  }catch(e){PRICES=JSON.parse(JSON.stringify(PRICES_DEFAULT));}
-}
-
-function syncSelectedSizes(){
-  ['trad','esp','doce'].forEach(cat=>{
-    const current=sizes[cat];
-    if(current&&PRICES[cat]&&PRICES[cat][current.k]) current.price=Number(PRICES[cat][current.k]);
-  });
-}
-
-async function loadStoreSettings(){
-  try{
-    const rows=await supabaseGet('store_settings','?select=key,value&key=eq.status');
-    if(Array.isArray(rows)&&rows.length&&rows[0].value){
-      storeSettings=Object.assign({manual_closed:false,closed_days:[]},rows[0].value);
-      return;
-    }
-  }catch(e){}
-  storeSettings={manual_closed:false,closed_days:[]};
-}
-
-function getStoreClosedReason(){
-  if(storeSettings.manual_closed) return 'Loja fechada no momento.';
-  const today=new Date().getDay();
-  const closedDays=Array.isArray(storeSettings.closed_days)?storeSettings.closed_days.map(Number):[];
-  if(closedDays.includes(today)) return 'Hoje não estamos funcionando.';
-  return '';
-}
-
-function isStoreOpen(){
-  return getStoreClosedReason()==='';
-}
-
-function renderStoreStatus(){
-  const el=document.getElementById('store-status');
-  const reason=getStoreClosedReason();
-  if(reason){
-    el.style.display='block';
-    el.textContent=reason+' Você ainda pode montar o pedido, mas o envio fica bloqueado.';
-  }else{
-    el.style.display='none';
-    el.textContent='';
+    const [ordersRes, productsRes, bairrosRes, settingsRes]=await Promise.all([
+      db.from('orders').select('*,order_items(*)').order('created_at',{ascending:false}).limit(100),
+      db.from('products').select('*').order('category').order('name'),
+      db.from('bairros').select('*').order('name'),
+      db.from('store_settings').select('*').eq('key','status').maybeSingle()
+    ]);
+    if(ordersRes.error) throw ordersRes.error;
+    if(productsRes.error) throw productsRes.error;
+    if(bairrosRes.error) throw bairrosRes.error;
+    orders=ordersRes.data||[];
+    products=productsRes.data||[];
+    bairros=bairrosRes.data||[];
+    if(settingsRes.data?.value) settings=Object.assign({manual_closed:false,closed_days:[]},settingsRes.data.value);
+    render();
+  }catch(err){
+    console.error(err);
+    $('content').innerHTML='<div class="notice">Erro ao carregar dados: '+esc(err.message||err)+'</div>';
   }
 }
 
-function renderSizePrices(){
-  ['trad','esp','doce'].forEach(cat=>{
-    const row=document.getElementById('sizes-'+cat);
-    if(!row) return;
-    row.querySelectorAll('.size-btn').forEach(btn=>{
-      const key=btn.dataset.size;
-      const price=PRICES[cat]&&PRICES[cat][key]?PRICES[cat][key]:0;
-      const sp=btn.querySelector('.sz-price');
-      if(sp) sp.textContent='R$'+Number(price).toFixed(0).replace('.',',');
-    });
-  });
+function render(){
+  if(current==='dashboard') return renderDashboard();
+  if(current==='pedidos') return renderPedidos();
+  if(current==='produtos') return renderProducts('Pizza Preco');
+  if(current==='bebidas') return renderProducts('Bebida');
+  if(current==='bairros') return renderBairros();
+  if(current==='funcionamento') return renderFuncionamento();
 }
 
-function getMaxFlavors(cat){
-  return sizes[cat]&&sizes[cat].k==='familia'?3:2;
-}
-
-function renderPizzaBuilder(cat){
-  const box=document.getElementById('builder-'+cat);
-  if(!box) return;
-  const max=getMaxFlavors(cat);
-  const selected=pizzaSelections[cat]||[];
-  const chips=selected.map((item,index)=>`<span class="builder-chip">${item.name}<button onclick="removePizzaFlavor('${cat}',${index})" title="Remover">x</button></span>`).join('');
-  const label=max===3?'Escolha até 3 sabores para a família':'Escolha 1 ou 2 sabores';
-  box.innerHTML=`
-    <div class="builder-top"><span>${label}</span><strong>${selected.length}/${max}</strong></div>
-    <div class="builder-chips">${chips || '<span style="font-size:12px;color:#7a4030">Toque no + do sabor para montar a pizza.</span>'}</div>
-    <div class="builder-actions">
-      <button class="builder-add" onclick="addSelectedPizza('${cat}')" ${selected.length?'':'disabled'}>Adicionar pizza</button>
-      <button class="builder-clear" onclick="clearPizzaSelection('${cat}')" ${selected.length?'':'disabled'}>Limpar</button>
+function renderDashboard(){
+  const hoje=orders.filter(o=>o.data===today());
+  const faturamentoHoje=hoje.reduce((s,o)=>s+Number(o.total||0),0);
+  const novos=orders.filter(o=>o.status==='novo').length;
+  const entreguesHoje=hoje.filter(o=>o.status==='entregue').length;
+  const ticket=hoje.length?faturamentoHoje/hoje.length:0;
+  const top={};
+  orders.forEach(o=>(o.order_items||[]).forEach(i=>{top[i.name]=(top[i.name]||0)+Number(i.qty||0)}));
+  const topList=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  $('content').innerHTML=`
+    <div class="grid">
+      <div class="card"><div class="stat-label">Pedidos hoje</div><div class="stat-value">${hoje.length}</div></div>
+      <div class="card"><div class="stat-label">Faturamento hoje</div><div class="stat-value">${money(faturamentoHoje)}</div></div>
+      <div class="card"><div class="stat-label">Pedidos novos</div><div class="stat-value">${novos}</div></div>
+      <div class="card"><div class="stat-label">Ticket médio</div><div class="stat-value">${money(ticket)}</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Mais vendidos</h2><button class="btn small secondary" onclick="loadAll()">Atualizar</button></div>
+      ${topList.length?topList.map(([name,qty])=>`<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0"><span>${esc(name)}</span><strong>${qty}x</strong></div>`).join(''):'<div class="notice">Ainda não há itens vendidos.</div>'}
     </div>`;
 }
 
-function renderAllPizzaBuilders(){
-  ['trad','esp','doce'].forEach(renderPizzaBuilder);
+function renderPedidos(){
+  $('content').innerHTML=renderPrinterPanel()+`
+    <div class="card">
+      <div class="section-title">
+        <h2>Pedidos</h2>
+        <div class="row">
+          <select class="select" id="filterStatus" style="width:auto" onchange="renderPedidosList()">
+            <option value="">Todos</option>
+            <option value="novo">Novo</option>
+            <option value="preparando">Preparando</option>
+            <option value="entregue">Entregue</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+          <button class="btn small secondary" onclick="loadAll()">Atualizar</button>
+        </div>
+      </div>
+      <div id="ordersArea"></div>
+    </div>`;
+  renderPedidosList();
 }
 
-function selectPizzaFlavor(cat,name,desc,e){
-  if(e) e.stopPropagation();
-  const selected=pizzaSelections[cat]||[];
-  const max=getMaxFlavors(cat);
-  const exists=selected.some(item=>item.name===name);
-  if(exists) return;
-  if(selected.length>=max){
-    alert(`Este tamanho permite até ${max} sabores.`);
+function renderPedidosList(){
+  const status=$('filterStatus')?.value||'';
+  const list=status?orders.filter(o=>o.status===status):orders;
+  $('ordersArea').innerHTML=list.length?list.map(o=>{
+    const items=(o.order_items||[]).map(i=>`${Number(i.qty||0)}x ${esc(i.name)} - ${money(Number(i.qty||0)*Number(i.price||0))}`).join('<br>');
+    return `<div class="order-card">
+      <div>
+        <strong>Pedido #${esc(o.numero||String(o.id).slice(0,8))}</strong>
+        <div class="order-meta">${esc(o.data||'')} ${esc(o.hora||'')}<br>${esc(o.cliente||'Cliente não informado')}</div>
+      </div>
+      <div>
+        <div class="order-meta">${esc(o.endereco||'')} - ${esc(o.bairro||'')}</div>
+        <div class="items">${items||'Sem itens cadastrados'}</div>
+        <div class="order-meta">Pagamento: ${esc(o.pagamento||'')} · Taxa: ${money(o.taxa)} · Total: <b>${money(o.total)}</b></div>
+      </div>
+      <div>
+        <span class="badge ${esc(o.status||'novo')}">${esc(o.status||'novo')}</span>
+        <div style="height:8px"></div>
+        <select class="select" onchange="updateStatus('${esc(o.id)}',this.value)">
+          ${['novo','preparando','entregue','cancelado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+        <div style="height:8px"></div>
+        <button class="btn small blue" onclick="printOrderBT('${esc(o.id)}')">BT</button>
+        <button class="btn small secondary" onclick="printOrder('${esc(o.id)}')">Navegador</button>
+      </div>
+    </div>`;
+  }).join(''):'<div class="notice">Nenhum pedido encontrado.</div>';
+}
+
+async function updateStatus(id,status){
+  const {error}=await db.from('orders').update({status}).eq('id',id);
+  if(error){alert('Erro ao atualizar status: '+error.message);return;}
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(o) o.status=status;
+  renderPedidosList();
+}
+
+function printOrder(id){
+  const o=orders.find(x=>String(x.id)===String(id));
+  if(!o) return;
+  const items=(o.order_items||[]).map(i=>`<tr><td>${Number(i.qty||0)}x</td><td>${esc(i.name)}</td><td>${money(Number(i.qty||0)*Number(i.price||0))}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+  body{font-family:Arial;color:#000;width:72mm;padding:8px}h1{text-align:center;font-size:17px}td{border-bottom:1px dashed #999;padding:5px;font-size:12px}table{width:100%;border-collapse:collapse}.total{text-align:right;font-size:16px;font-weight:bold}
+  
+.printer-panel{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  background:#160904;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:14px;
+}
+.printer-status{
+  font-size:13px;
+  color:var(--muted);
+  width:100%;
+}
+.printer-status.ok{color:var(--green)}
+.printer-status.err{color:var(--red)}
+.printer-status.wait{color:var(--yellow)}
+
+
+/* ===== AJUSTE SEGURO: APARENCIA DE APP NO CELULAR ===== */
+@media(max-width:850px){
+  body{
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .app{
+    grid-template-columns:1fr!important;
+  }
+  .sidebar{
+    display:none!important;
+  }
+  .main{
+    max-width:100%!important;
+    width:100%!important;
+    padding:12px!important;
+  }
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:rgba(16,7,4,.96);
+    padding:10px 0;
+    margin-bottom:8px;
+    backdrop-filter:blur(10px);
+  }
+  .topbar h1{
+    font-size:21px!important;
+  }
+  .topbar p{
+    font-size:12px!important;
+  }
+  .tabs-mobile{
+    display:flex!important;
+    position:sticky;
+    top:74px;
+    z-index:39;
+    gap:8px;
+    overflow-x:auto;
+    background:rgba(16,7,4,.96);
+    padding:8px 0 10px;
+    margin-bottom:12px;
+    scrollbar-width:none;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none}
+  .tabs-mobile button{
+    white-space:nowrap;
+    min-height:42px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--muted);
+    border-radius:999px;
+    padding:9px 13px;
+    font-weight:900;
+    font-size:13px;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    color:#160801;
+  }
+  .grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:10px!important;
+  }
+  .card{
+    border-radius:18px!important;
+    padding:14px!important;
+  }
+  .order-card{
+    grid-template-columns:1fr!important;
+    padding:13px!important;
+  }
+  .form-grid{
+    grid-template-columns:1fr!important;
+  }
+  .btn{
+    min-height:46px;
+    border-radius:14px;
+  }
+  .btn.small{
+    min-height:38px;
+    font-size:13px;
+  }
+  .input,.select,textarea{
+    min-height:46px;
+    font-size:16px;
+  }
+}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr!important}
+}
+.install-fab{
+  position:fixed;
+  right:14px;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:9999;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  color:#160801;
+  font-weight:900;
+  padding:14px 18px;
+  box-shadow:0 14px 35px rgba(0,0,0,.45);
+  display:none;
+}
+.install-fab.show{display:block}
+.install-card{
+  position:fixed;
+  left:12px;
+  right:12px;
+  bottom:calc(76px + env(safe-area-inset-bottom));
+  z-index:9998;
+  background:#160904;
+  border:1px solid var(--line);
+  color:var(--text);
+  border-radius:20px;
+  padding:14px;
+  box-shadow:0 14px 38px rgba(0,0,0,.5);
+  display:none;
+  font-size:15px;
+  line-height:1.45;
+}
+.install-card.show{display:block}
+.install-card strong{color:var(--brand2)}
+.install-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+
+/* ===== CORRECAO BOTAO INSTALAR ===== */
+@media(max-width:850px){
+  #installBtn{
+    display:block!important;
+  }
+}
+.install-fab{
+  display:block;
+}
+
+
+/* ===== CORRECAO NAVEGACAO MOBILE ===== */
+@media(max-width:850px){
+  .topbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:40!important;
+    padding:12px 0 10px!important;
+    margin-bottom:10px!important;
+  }
+  .tabs-mobile{
+    display:grid!important;
+    grid-template-columns:repeat(6,auto);
+    gap:6px!important;
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    top:auto!important;
+    z-index:9997!important;
+    background:#100704!important;
+    border-top:1px solid var(--line)!important;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    overflow-x:auto!important;
+    scrollbar-width:none!important;
+    box-shadow:0 -10px 30px rgba(0,0,0,.35)!important;
+  }
+  .tabs-mobile::-webkit-scrollbar{display:none!important}
+  .tabs-mobile button{
+    min-width:84px!important;
+    min-height:50px!important;
+    white-space:normal!important;
+    text-align:center!important;
+    border-radius:14px!important;
+    padding:7px 8px!important;
+    font-size:11px!important;
+    line-height:1.15!important;
+    border:1px solid var(--line)!important;
+    background:var(--panel)!important;
+    color:var(--muted)!important;
+  }
+  .tabs-mobile button.active{
+    background:linear-gradient(135deg,var(--brand),var(--brand2))!important;
+    color:#160801!important;
+  }
+  .main{
+    padding-bottom:96px!important;
+  }
+  .topbar .row{
+    width:100%;
+    justify-content:flex-start;
+  }
+  .topbar{
+    flex-direction:column;
+    gap:8px;
+  }
+  .install-fab{
+    bottom:calc(86px + env(safe-area-inset-bottom))!important;
+  }
+  .install-card{
+    bottom:calc(148px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media(max-width:390px){
+  .tabs-mobile button{
+    min-width:76px!important;
+    font-size:10.5px!important;
+  }
+}
+
+</style></head><body><h1>La Casa da Pizza</h1><p><b>Pedido #${esc(o.numero||'')}</b></p><p>${esc(o.data||'')} ${esc(o.hora||'')}</p><p><b>Cliente:</b> ${esc(o.cliente||'')}</p><p><b>Endereço:</b> ${esc(o.endereco||'')} - ${esc(o.bairro||'')}</p><table>${items}</table><p>Taxa: ${money(o.taxa)}</p><p class="total">Total: ${money(o.total)}</p></body></html>`;
+  const w=window.open('','_blank','width=360,height=640');
+  w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+function renderProducts(category){
+  const isBebida=category==='Bebida';
+  const list=products.filter(p=>p.category===category);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>${isBebida?'Bebidas':'Preços de Pizza'}</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="${isBebida?'Refrigerante 2L':'preco_trad_media'}"></div>
+        <div class="field"><label>Preço</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div>
+      </div>
+      <button class="btn" onclick="addProduct('${category}')">Adicionar</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Nome</th><th>Preço</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${list.map(p=>`<tr>
+          <td><input class="input" id="name-${esc(p.id)}" value="${esc(p.name)}"></td>
+          <td><input class="input" id="price-${esc(p.id)}" type="number" step="0.01" value="${Number(p.price||0)}"></td>
+          <td>${p.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveProduct('${esc(p.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleProduct('${esc(p.id)}',${p.active===false?'true':'false'})">${p.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addProduct(category){
+  const name=$('prodName').value.trim();
+  const price=Number($('prodPrice').value||0);
+  if(!name){alert('Digite o nome.');return;}
+  const {error}=await db.from('products').insert({name,price,category,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveProduct(id){
+  const name=$('name-'+id).value.trim();
+  const price=Number($('price-'+id).value||0);
+  const {error}=await db.from('products').update({name,price,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleProduct(id,active){
+  const {error}=await db.from('products').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderBairros(){
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Novo bairro</h2></div>
+      <div class="form-grid">
+        <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div>
+        <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div>
+      </div>
+      <button class="btn" onclick="addBairro()">Adicionar bairro</button>
+    </div>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead>
+        <tbody>${bairros.map(b=>`<tr>
+          <td><input class="input" id="bname-${esc(b.id)}" value="${esc(b.name)}"></td>
+          <td><input class="input" id="btaxa-${esc(b.id)}" type="number" step="0.01" value="${Number(b.taxa||0)}"></td>
+          <td>${b.active===false?'Não':'Sim'}</td>
+          <td class="row">
+            <button class="btn small green" onclick="saveBairro('${esc(b.id)}')">Salvar</button>
+            <button class="btn small red" onclick="toggleBairro('${esc(b.id)}',${b.active===false?'true':'false'})">${b.active===false?'Ativar':'Inativar'}</button>
+          </td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+async function addBairro(){
+  const name=$('bairroName').value.trim();
+  const taxa=Number($('bairroTaxa').value||0);
+  if(!name){alert('Digite o bairro.');return;}
+  const {error}=await db.from('bairros').insert({name,taxa,active:true});
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function saveBairro(id){
+  const name=$('bname-'+id).value.trim();
+  const taxa=Number($('btaxa-'+id).value||0);
+  const {error}=await db.from('bairros').update({name,taxa,updated_at:new Date().toISOString()}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+async function toggleBairro(id,active){
+  const {error}=await db.from('bairros').update({active}).eq('id',id);
+  if(error){alert('Erro: '+error.message);return;}
+  await loadAll();
+}
+
+function renderFuncionamento(){
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const closed=(settings.closed_days||[]).map(Number);
+  $('content').innerHTML=`
+    <div class="card">
+      <div class="section-title"><h2>Status da loja</h2></div>
+      <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div>
+      <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2>Dias sem funcionamento</h2></div>
+      <div class="form-grid">
+        ${days.map((d,i)=>`<label class="notice" style="margin:0"><input type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}</label>`).join('')}
+      </div>
+    </div>`;
+}
+
+async function saveSettings(){
+  const {error}=await db.from('store_settings').upsert({key:'status',value:settings,updated_at:new Date().toISOString()},{onConflict:'key'});
+  if(error){alert('Erro: '+error.message);return;}
+}
+
+async function toggleStore(){
+  settings.manual_closed=!settings.manual_closed;
+  await saveSettings();
+  renderFuncionamento();
+}
+
+async function saveClosedDays(){
+  settings.closed_days=[...document.querySelectorAll('input[type=checkbox]:checked')].map(i=>Number(i.value));
+  await saveSettings();
+}
+
+
+// ===== IMPRESSORA TÉRMICA BLUETOOTH ESC/POS 58mm/80mm =====
+// Compatível com várias impressoras portáteis 58mm que usam bobina pequena.
+// Requer Chrome/Edge no Android ou Windows com Web Bluetooth.
+const PRINT_SERVICE_CANDIDATES=[
+  '000018f0-0000-1000-8000-00805f9b34fb',
+  '0000ffe0-0000-1000-8000-00805f9b34fb',
+  'e7810a71-73ae-499d-8c15-faa9aef0c3f2'
+];
+const PRINT_CHAR_CANDIDATES=[
+  '00002af1-0000-1000-8000-00805f9b34fb',
+  '0000ffe1-0000-1000-8000-00805f9b34fb',
+  'bef8d6c9-9c21-4c9e-b632-bd58c1009f9f'
+];
+
+let btDevice=null;
+let btChar=null;
+let printerWidth=Number(localStorage.getItem('printer_width')||58);
+
+function setPrinterStatus(msg,type='wait'){
+  const el=document.getElementById('printerStatus');
+  if(!el) return;
+  el.textContent=msg;
+  el.className='printer-status '+type;
+}
+
+function renderPrinterPanel(){
+  return `
+    <div class="printer-panel">
+      <button class="btn blue" onclick="connectThermalPrinter()">Conectar impressora Bluetooth</button>
+      <button class="btn secondary" onclick="disconnectThermalPrinter()">Desconectar</button>
+      <button class="btn secondary" onclick="testThermalPrinter()">Teste BT</button>
+      <select class="select" style="width:auto" onchange="setPrinterWidth(this.value)">
+        <option value="58" ${printerWidth===58?'selected':''}>Bobina 58mm</option>
+        <option value="80" ${printerWidth===80?'selected':''}>Bobina 80mm</option>
+      </select>
+      <div id="printerStatus" class="printer-status">Use Chrome/Edge no Android ou Windows. Primeiro pareie a impressora no Bluetooth do aparelho.</div>
+    </div>`;
+}
+
+function setPrinterWidth(value){
+  printerWidth=Number(value)||58;
+  localStorage.setItem('printer_width',String(printerWidth));
+  setPrinterStatus('Largura configurada para bobina '+printerWidth+'mm.','ok');
+}
+
+function textToBytes(text){
+  // ESC/POS normalmente usa latin1/CP850 melhor que UTF-8 em impressoras baratas.
+  const clean=String(text)
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[–—]/g,'-')
+    .replace(/[“”]/g,'"')
+    .replace(/[‘’]/g,"'");
+  const bytes=new Uint8Array(clean.length);
+  for(let i=0;i<clean.length;i++) bytes[i]=clean.charCodeAt(i)&0xff;
+  return bytes;
+}
+
+function lineWidth(){
+  return printerWidth===80?48:32;
+}
+
+function center(text){
+  const w=lineWidth();
+  text=String(text||'').slice(0,w);
+  const left=Math.max(0,Math.floor((w-text.length)/2));
+  return ' '.repeat(left)+text;
+}
+
+function moneyPlain(v){
+  return 'R$ '+Number(v||0).toFixed(2).replace('.',',');
+}
+
+function fitLeftRight(left,right){
+  const w=lineWidth();
+  left=String(left||'');
+  right=String(right||'');
+  const maxLeft=Math.max(1,w-right.length-1);
+  if(left.length>maxLeft) left=left.slice(0,maxLeft-1)+'.';
+  return left+' '.repeat(Math.max(1,w-left.length-right.length))+right;
+}
+
+function wrapText(text,indent=''){
+  const w=lineWidth()-indent.length;
+  const words=String(text||'').split(/\s+/);
+  const lines=[];
+  let line='';
+  words.forEach(word=>{
+    if((line+' '+word).trim().length>w){
+      if(line) lines.push(indent+line);
+      line=word;
+    }else{
+      line=(line+' '+word).trim();
+    }
+  });
+  if(line) lines.push(indent+line);
+  return lines.join('\n');
+}
+
+function buildEscPosOrder(order){
+  const ESC='\x1b';
+  const GS='\x1d';
+  const INIT=ESC+'@';
+  const BOLD_ON=ESC+'E\x01';
+  const BOLD_OFF=ESC+'E\x00';
+  const CENTER=ESC+'a\x01';
+  const LEFT=ESC+'a\x00';
+  const NORMAL=GS+'!\x00';
+  const DOUBLE=GS+'!\x11';
+  const CUT=GS+'V\x41\x03';
+  const LINE='-'.repeat(lineWidth());
+  const items=order.order_items||[];
+
+  let out='';
+  out+=INIT;
+  out+=CENTER+BOLD_ON+DOUBLE+'LA CASA DA PIZZA\n'+NORMAL+BOLD_OFF;
+  out+=CENTER+'PEDIDO #'+(order.numero||String(order.id).slice(0,8))+'\n';
+  out+=CENTER+(order.data||'')+' '+(order.hora||'')+'\n';
+  out+=LEFT+LINE+'\n';
+  out+=BOLD_ON+'CLIENTE\n'+BOLD_OFF;
+  out+=wrapText(order.cliente||'Nao informado')+'\n';
+  out+=BOLD_ON+'ENDERECO\n'+BOLD_OFF;
+  out+=wrapText((order.endereco||'')+' - '+(order.bairro||''))+'\n';
+  out+=LINE+'\n';
+  out+=BOLD_ON+'ITENS\n'+BOLD_OFF;
+  items.forEach(i=>{
+    const qty=Number(i.qty||0);
+    const price=Number(i.price||0);
+    out+=wrapText(qty+'x '+(i.name||''))+'\n';
+    out+=fitLeftRight('',moneyPlain(qty*price))+'\n';
+  });
+  out+=LINE+'\n';
+  out+=fitLeftRight('Taxa entrega',moneyPlain(order.taxa))+'\n';
+  out+=BOLD_ON+fitLeftRight('TOTAL',moneyPlain(order.total))+BOLD_OFF+'\n';
+  out+=LINE+'\n';
+  out+='Pagamento: '+(order.pagamento||'')+'\n';
+  if(order.troco) out+='Troco: '+order.troco+'\n';
+  if(order.obs) out+='Obs: '+wrapText(order.obs,'')+'\n';
+  out+=LINE+'\n';
+  out+=CENTER+'Obrigado pela preferencia!\n';
+  out+='\n\n\n';
+  out+=CUT;
+  return textToBytes(out);
+}
+
+async function findWritableCharacteristic(server){
+  for(const serviceUuid of PRINT_SERVICE_CANDIDATES){
+    try{
+      const service=await server.getPrimaryService(serviceUuid);
+      for(const charUuid of PRINT_CHAR_CANDIDATES){
+        try{
+          return await service.getCharacteristic(charUuid);
+        }catch(e){}
+      }
+      const chars=await service.getCharacteristics();
+      const writable=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
+      if(writable) return writable;
+    }catch(e){}
+  }
+  throw new Error('Nao achei o servico de impressao. Tente parear a impressora no Bluetooth do sistema e conectar de novo.');
+}
+
+async function connectThermalPrinter(){
+  if(!navigator.bluetooth){
+    setPrinterStatus('Web Bluetooth nao suportado. Use Chrome/Edge no Android ou Windows.','err');
     return;
   }
-  selected.push({name,desc});
-  pizzaSelections[cat]=selected;
-  if(e&&e.target){
-    e.target.classList.add('in-cart');
-    e.target.textContent='✓';
-    setTimeout(()=>{e.target.classList.remove('in-cart');e.target.textContent='+'},900);
-  }
-  renderPizzaBuilder(cat);
-}
-
-function removePizzaFlavor(cat,index){
-  pizzaSelections[cat].splice(index,1);
-  renderPizzaBuilder(cat);
-}
-
-function clearPizzaSelection(cat){
-  pizzaSelections[cat]=[];
-  renderPizzaBuilder(cat);
-}
-
-function addSelectedPizza(cat){
-  const selected=pizzaSelections[cat]||[];
-  if(!selected.length) return;
-  const sz=sizes[cat];
-  const name=selected.length===1?selected[0].name:(selected.length===2?`Meia ${selected[0].name} / Meia ${selected[1].name}`:selected.map(item=>item.name).join(' / '));
-  const desc=selected.map(item=>`${item.name}: ${item.desc}`).join(' | ');
-  cart.push({cat,name,desc,size:sz.name,slices:sz.slices,price:sz.price,qty:1,id:Date.now()+Math.random()});
-  clearPizzaSelection(cat);
-  renderCart();
-  updateTotals();
-}
-
-function addToCart(cat,name,desc,e,price,variant){
-  if(isPizzaCategory(cat)){
-    selectPizzaFlavor(cat,name,desc,e);
-    return;
-  }
-  if(e) e.stopPropagation();
-  const sz=sizes[cat]||{name:'Unidade',slices:'',price:0};
-  const itemPrice=typeof price==='number'?price:sz.price;
-  const itemName=variant?`${name} (${variant})`:name;
-  const itemDesc=variant?`${desc} - ${variant}`:desc;
-  cart.push({cat,name:itemName,desc:itemDesc,size:sz.name,slices:sz.slices,price:itemPrice,qty:1,id:Date.now()+Math.random()});
-  renderCart();
-  updateTotals();
-  if(e&&e.target){
-    e.target.classList.add('in-cart');
-    e.target.textContent='✓';
-    setTimeout(()=>{e.target.classList.remove('in-cart');e.target.textContent='+'},1200);
-  }
-}
-
-function renderCart(){
-  const mini=document.getElementById('cart-items-mini');
-  const count=cart.reduce((s,i)=>s+i.qty,0);
-  document.getElementById('cart-count').textContent=count;
-  if(cart.length===0){
-    mini.innerHTML='';
-    renderFullCart();
-    renderSuggestedBebidas();
-    return;
-  }
-  mini.innerHTML='';
-  cart.slice(-3).forEach(item=>{
-    const div=document.createElement('div');
-    div.className='cart-item';
-    div.innerHTML=`<span class="ci-name">${item.name} <small style="color:#7a4030;font-size:10px">(${item.size})</small></span><div class="ci-qty"><button onclick="changeQty(${item.id},-1)">−</button><span>${item.qty}</span><button onclick="changeQty(${item.id},1)">+</button></div><span class="ci-price">R$${(item.price*item.qty).toFixed(2).replace('.',',')}</span>`;
-    mini.appendChild(div);
-  });
-  if(cart.length>3){
-    const more=document.createElement('div');
-    more.style.cssText='text-align:center;font-size:11px;color:#7a4030;padding:4px';
-    more.textContent='+'+(cart.length-3)+' mais no pedido';
-    mini.appendChild(more);
-  }
-  renderFullCart();
-  renderSuggestedBebidas();
-}
-
-function renderSuggestedBebidas(){
-  const area=document.getElementById('bebidas-area');
-  const list=document.getElementById('list-bebidas-suggest');
-  if(!area||!list) return;
-  const activeTab=document.querySelector('.tab.active')?.textContent||'';
-  area.style.display=['Tradicionais','Especiais','Doces'].includes(activeTab)&&BEBIDAS.length>0?'block':'none';
-  list.innerHTML='';
-  BEBIDAS.forEach(b=>{
-    const item=document.createElement('div');
-    item.className='pizza-card';
-    const variantId=b.variants&&b.variants.length?`suggest-${b.name.replace(/\s+/g,'_').replace(/[^\w-]/g,'')}`:'';
-    const variantHtml=variantId?`<div style="margin:10px 0"><select class="delivery-input" id="${variantId}" style="width:100%">${b.variants.map(v=>`<option value="${escapeAttr(v)}">${v}</option>`).join('')}</select></div>`:'';
-    const variantArg=variantId?`,document.getElementById('${variantId}').value`:'';
-    item.innerHTML=`<div class="pizza-info"><div class="pizza-name">${b.name}</div><div class="pizza-desc">${b.desc||'Bebida'}</div>${variantHtml}</div><button class="add-btn" onclick="addToCart('bebidas','${escapeAttr(b.name)}','${escapeAttr(b.desc||'Bebida')}',event,${Number(b.price)||0}${variantArg})">+</button>`;
-    list.appendChild(item);
-  });
-}
-
-function changeQty(id,delta){
-  const idx=cart.findIndex(i=>i.id===id);
-  if(idx===-1) return;
-  cart[idx].qty+=delta;
-  if(cart[idx].qty<=0) cart.splice(idx,1);
-  renderCart();
-  updateTotals();
-}
-
-function renderFullCart(){
-  const s=document.getElementById('cart-summary');
-  if(!s) return;
-  if(cart.length===0){
-    s.innerHTML='<div style="text-align:center;color:#5a2400;padding:30px 0"><p style="font-size:32px">🍕</p><p style="margin-top:8px;font-size:14px">Seu pedido está vazio</p><p style="font-size:12px;color:#7a4030;margin-top:4px">Escolha sabores nas abas acima</p></div>';
-    return;
-  }
-  let html='<div class="section-title">Itens do Pedido</div>';
-  cart.forEach(item=>{
-    html+=`<div class="pizza-card" style="margin-bottom:8px"><div class="pizza-info"><div class="pizza-name">${item.name} <span style="color:#c0856a;font-size:11px">(${item.size}${item.slices?' · '+item.slices:''})</span></div><div class="pizza-desc">${item.desc}</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><div class="ci-qty"><button onclick="changeQty(${item.id},-1)">−</button><span>${item.qty}</span><button onclick="changeQty(${item.id},1)">+</button></div><span style="color:#ff6b3d;font-weight:700">R$${(item.price*item.qty).toFixed(2).replace('.',',')}</span></div></div>`;
-  });
-  if(selectedBorda) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div class="pizza-name">Borda ${selectedBorda.name}</div><span style="color:#ff6b3d;font-weight:700">R$${selectedBorda.price.toFixed(2).replace('.',',')}</span></div>`;
-  const street=document.getElementById('addr-street')?.value.trim()||'';
-  const number=document.getElementById('addr-number')?.value.trim()||'';
-  const customer=document.getElementById('customer-name')?.value.trim()||'';
-  const neighborhood=getSelectedNeighborhoodName();
-  const payment=getPaymentMethod();
-  const delivery=parseFloat(document.getElementById('delivery-fee')?.value)||0;
-  if(customer) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px"><div class="pizza-name">Cliente</div><div style="color:#c0856a;font-size:13px">${customer}</div></div>`;
-  if(street||number||neighborhood) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center"><div><div class="pizza-name">Endereço</div><div style="color:#c0856a;font-size:13px">${street} ${number} - ${neighborhood}</div></div><span style="color:#ff6b3d;font-weight:700">R$${delivery.toFixed(2).replace('.',',')}</span></div>`;
-  if(payment) html+=`<div style="background:#2d1200;border:1px solid #5a2400;border-radius:12px;padding:10px 14px;margin-bottom:8px"><div class="pizza-name">Pagamento</div><div style="color:#c0856a;font-size:13px">${payment}</div></div>`;
-  s.innerHTML=html;
-}
-
-function updateTotals(){
-  const sub=cart.reduce((s,i)=>s+i.price*i.qty,0);
-  const borda=selectedBorda?selectedBorda.price:0;
-  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
-  const total=sub+borda+delivery;
-  document.getElementById('total-display').textContent='R$ '+total.toFixed(2).replace('.',',');
-  updateAddressValidationUI();
-  document.getElementById('checkout-btn').disabled=!(isStoreOpen()&&cart.length>0&&isAddressValid()&&isPaymentSelected());
-  renderFullCart();
-}
-
-function getPaymentMethod(){
-  return document.getElementById('payment-method')?.value||'';
-}
-
-function isPaymentSelected(){
-  return getPaymentMethod()!=='';
-}
-
-function renderBordas(){
-  const g=document.getElementById('bordas-grid');
-  g.innerHTML='<div class="border-opt '+(selectedBorda===null?'selected':'')+'" onclick="selectBorda(null,this)"><div class="b-name">Sem borda</div><div class="b-price">Grátis</div></div>';
-  BORDAS.forEach(b=>{
-    const d=document.createElement('div');
-    d.className='border-opt';
-    d.onclick=function(){selectBorda(b,this)};
-    d.innerHTML=`<div class="b-name">${b.name}</div><div class="b-price">+R$${b.price},00</div>`;
-    g.appendChild(d);
-  });
-  const sel=document.getElementById('addr-borda');
-  sel.innerHTML='<option value="">Sem borda</option>';
-  BORDAS.forEach((b,idx)=>{
-    const o=document.createElement('option');
-    o.value=idx;
-    o.textContent=b.name+' - R$'+b.price.toFixed(2).replace('.',',');
-    sel.appendChild(o);
-  });
-  if(selectedBorda){
-    const idx=BORDAS.findIndex(x=>x.name===selectedBorda.name);
-    sel.value=idx>-1?idx:'';
-  }
-}
-
-function selectBordaByIndex(idx){
-  selectedBorda=idx===''?null:Object.assign({},BORDAS[parseInt(idx,10)]);
-  document.querySelectorAll('.border-opt').forEach(el=>el.classList.remove('selected'));
-  const items=document.querySelectorAll('#bordas-grid .border-opt');
-  if(items.length) items[selectedBorda?parseInt(idx,10)+1:0].classList.add('selected');
-  updateTotals();
-}
-
-function selectBorda(borda,el){
-  selectedBorda=borda;
-  document.querySelectorAll('.border-opt').forEach(b=>b.classList.remove('selected'));
-  el.classList.add('selected');
-  const sel=document.getElementById('addr-borda');
-  sel.value=borda?BORDAS.findIndex(x=>x.name===borda.name):'';
-  updateTotals();
-}
-
-function isPizzaTab(name){
-  return ['tradicionais','especiais','doces'].includes(name);
-}
-
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    const tabs=['tradicionais','especiais','doces','bordas','pedido'];
-    t.classList.toggle('active',tabs[i]===name);
-  });
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  const area=document.getElementById('bebidas-area');
-  if(area){
-    area.style.display=isPizzaTab(name)&&BEBIDAS.length>0?'block':'none';
-    if(isPizzaTab(name)) renderSuggestedBebidas();
-  }
-  if(name==='pedido') renderFullCart();
-}
-
-function normalizePaymentForOrder(payment){
-  if(payment==='PIX') return 'pix';
-  if(payment==='Cartão no entregador') return 'cartao';
-  return 'dinheiro';
-}
-
-function getOrderAmounts(){
-  const itemsSubtotal=cart.reduce((s,i)=>s+i.price*i.qty,0)+(selectedBorda?selectedBorda.price:0);
-  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
-  return {subtotal:itemsSubtotal,delivery,total:itemsSubtotal+delivery};
-}
-
-function buildWhatsappMessage(orderNumber){
-  let msg='🍕 *Pedido - La Casa da Pizza*\n\n';
-  if(orderNumber) msg+=`Pedido #${orderNumber}\n\n`;
-  const customer=document.getElementById('customer-name').value.trim();
-  msg+=`Cliente: ${customer}\n`;
-  cart.forEach(i=>{msg+=`▸ ${i.qty}x ${i.name} (${i.size}): R$${(i.price*i.qty).toFixed(2)}\n`;});
-  if(selectedBorda) msg+=`▸ Borda ${selectedBorda.name}: R$${selectedBorda.price.toFixed(2)}\n`;
-  const street=document.getElementById('addr-street').value.trim();
-  const number=document.getElementById('addr-number').value.trim();
-  const neighborhood=getSelectedNeighborhoodName();
-  const payment=getPaymentMethod();
-  const amounts=getOrderAmounts();
-  msg+=`\nEndereço: ${street} ${number} - ${neighborhood}\n`;
-  if(amounts.delivery>0) msg+=`▸ Taxa de entrega: R$${amounts.delivery.toFixed(2)}\n`;
-  msg+=`▸ Pagamento: ${payment}\n`;
-  msg+=`\n*Total: R$${amounts.total.toFixed(2)}*`;
-  return msg;
-}
-
-async function saveOrderToSupabase(){
-  if(!db) throw new Error('Biblioteca do Supabase não carregou. Verifique sua internet.');
-
-  const orderNumber=createOrderNumber();
-  const customer=document.getElementById('customer-name').value.trim();
-  const street=document.getElementById('addr-street').value.trim();
-  const number=document.getElementById('addr-number').value.trim();
-  const neighborhood=getSelectedNeighborhoodName();
-  const neighborhoodId=getSelectedNeighborhoodId();
-  const payment=getPaymentMethod();
-  const amounts=getOrderAmounts();
-
-  const now=new Date();
-  const dataPedido=now.toISOString().slice(0,10);
-  const horaPedido=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-
-  const items=cart.map(i=>({
-    name:`${i.name} (${i.size})`,
-    qty:Number(i.qty)||1,
-    price:Number(i.price)||0
-  }));
-
-  if(selectedBorda){
-    items.push({
-      name:`Borda ${selectedBorda.name}`,
-      qty:1,
-      price:Number(selectedBorda.price)||0
+  try{
+    setPrinterStatus('Abrindo lista de dispositivos...','wait');
+    btDevice=await navigator.bluetooth.requestDevice({
+      acceptAllDevices:true,
+      optionalServices:PRINT_SERVICE_CANDIDATES
     });
-  }
-
-  const payload={
-    numero:orderNumber,
-    cliente:customer || null,
-    endereco:`${street} ${number}`.trim(),
-    bairro_id:neighborhoodId || null,
-    bairro:neighborhood,
-    taxa:amounts.delivery,
-    subtotal:amounts.subtotal,
-    total:amounts.total,
-    pagamento:normalizePaymentForOrder(payment),
-    troco:null,
-    obs:'',
-    status:'novo',
-    hora:horaPedido,
-    data:dataPedido,
-    items
-  };
-
-  const {data,error}=await db.rpc('create_public_order',{p_order:payload});
-  if(error) throw new Error(error.message || 'Erro ao salvar pedido no Supabase.');
-  return {id:data?.id,numero:data?.numero || orderNumber};
-}
-
-async function sendToWhatsapp(){
-  if(cart.length===0) return;
-  const closedReason=getStoreClosedReason();
-  if(closedReason){alert(closedReason);return;}
-  if(!isAddressValid()){alert('Preencha nome, rua, número e selecione o bairro para entrega.');return;}
-  if(!isPaymentSelected()){alert('Selecione a forma de pagamento para finalizar o pedido.');return;}
-  const btn=document.getElementById('checkout-btn');
-  btn.disabled=true;
-  btn.textContent='Enviando...';
-  let savedOrder=null;
-  try{
-    savedOrder=await saveOrderToSupabase();
+    setPrinterStatus('Conectando em '+(btDevice.name||'impressora')+'...','wait');
+    const server=await btDevice.gatt.connect();
+    btChar=await findWritableCharacteristic(server);
+    btDevice.addEventListener('gattserverdisconnected',()=>{
+      btChar=null;
+      setPrinterStatus('Impressora desconectada.','err');
+    });
+    setPrinterStatus('Conectada: '+(btDevice.name||'impressora termica')+'. Agora use o botao BT no pedido.','ok');
   }catch(e){
-    console.warn('Pedido não salvo no painel.',e);
-    alert('Não foi possível salvar o pedido no painel. Motivo: '+(e.message||e)+'. O WhatsApp será aberto mesmo assim.');
-  }finally{
-    btn.textContent='Finalizar Pedido';
-    updateTotals();
+    btChar=null;
+    setPrinterStatus('Erro ao conectar: '+(e.message||e),'err');
   }
-  const msg=buildWhatsappMessage(savedOrder?.numero);
-  const url='https://wa.me/55'+'38988532530'+'?text='+encodeURIComponent(msg);
-  window.open(url,'_blank');
 }
 
-async function loadBeverages(){
-  try{
-    const rows=await supabaseGet('products','?select=name,price,category,active&category=eq.Bebida&active=eq.true&order=name.asc');
-    if(Array.isArray(rows)&&rows.length){
-      BEBIDAS=rows.map(b=>({name:b.name,desc:'Bebida',price:Number(b.price)||0,variants:[]}));
-      localStorage.setItem('pizzaria_beverages',JSON.stringify(BEBIDAS));
-      return;
+function disconnectThermalPrinter(){
+  try{ if(btDevice?.gatt?.connected) btDevice.gatt.disconnect(); }catch(e){}
+  btDevice=null;
+  btChar=null;
+  setPrinterStatus('Desconectada.','wait');
+}
+
+async function writePrinterBytes(bytes){
+  if(!btChar) throw new Error('Impressora nao conectada.');
+  const chunk=180; // impressoras 58mm baratas costumam aceitar blocos pequenos
+  for(let i=0;i<bytes.length;i+=chunk){
+    const part=bytes.slice(i,i+chunk);
+    if(btChar.properties.writeWithoutResponse && btChar.writeValueWithoutResponse){
+      await btChar.writeValueWithoutResponse(part);
+    }else{
+      await btChar.writeValue(part);
     }
-  }catch(e){}
-  BEBIDAS=[];
-  try{localStorage.removeItem('pizzaria_beverages');}catch(e){}
+    await new Promise(r=>setTimeout(r,70));
+  }
 }
 
-async function loadNeighborhoods(){
+async function printOrderBT(id){
+  const order=orders.find(x=>String(x.id)===String(id));
+  if(!order) return;
   try{
-    const rows=await supabaseGet('bairros','?select=id,name,taxa,active&active=eq.true&order=name.asc');
-    if(Array.isArray(rows)&&rows.length){
-      NEIGHBORHOODS=rows.map(n=>({id:n.id,name:n.name,fee:Number(n.taxa)||0,active:n.active!==false}));
-      localStorage.setItem('pizzaria_neighborhoods',JSON.stringify(NEIGHBORHOODS));
-      return;
-    }
-  }catch(e){}
-  NEIGHBORHOODS=[];
-  try{localStorage.removeItem('pizzaria_neighborhoods');}catch(e){}
+    setPrinterStatus('Imprimindo pedido #'+(order.numero||'')+'...','wait');
+    await writePrinterBytes(buildEscPosOrder(order));
+    setPrinterStatus('Pedido impresso com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro ao imprimir: '+(e.message||e),'err');
+  }
 }
 
-function populateNeighborhoods(){
-  const list=document.getElementById('neighborhood-options');
-  const search=document.getElementById('addr-neighborhood-search');
-  list.innerHTML='';
-  document.getElementById('addr-neighborhood').value='';
-  document.getElementById('delivery-fee').value='';
-  if(NEIGHBORHOODS.length===0){
-    search.placeholder='Cadastre bairros no admin';
-    search.disabled=true;
+async function testThermalPrinter(){
+  const fake={
+    id:'teste',
+    numero:'TESTE',
+    cliente:'Cliente Teste',
+    endereco:'Rua Teste, 123',
+    bairro:'Centro',
+    data:new Date().toISOString().slice(0,10),
+    hora:new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+    pagamento:'pix',
+    taxa:5,
+    total:53,
+    order_items:[{qty:1,name:'Pizza Calabresa Grande',price:48}]
+  };
+  try{
+    setPrinterStatus('Enviando teste...','wait');
+    await writePrinterBytes(buildEscPosOrder(fake));
+    setPrinterStatus('Teste enviado com sucesso.','ok');
+  }catch(e){
+    setPrinterStatus('Erro no teste: '+(e.message||e),'err');
+  }
+}
+
+
+
+
+// ===== INSTALACAO PWA ROBUSTA =====
+let deferredInstallPrompt=null;
+
+function isIosDevice(){
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
+function isStandaloneMode(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function hideInstallCard(){
+  const card=document.getElementById('installCard');
+  if(card) card.classList.remove('show');
+}
+
+function showInstallButton(){
+  if(isStandaloneMode()) return;
+  const btn=document.getElementById('installBtn');
+  if(btn) btn.classList.add('show');
+}
+
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  showInstallButton();
+});
+
+async function installApp(){
+  const card=document.getElementById('installCard');
+  const text=document.getElementById('installText');
+
+  if(isStandaloneMode()){
+    if(text) text.innerHTML='O painel já está instalado como app neste aparelho.';
+    if(card) card.classList.add('show');
     return;
   }
-  search.placeholder='Digite o bairro';
-  search.disabled=false;
-  NEIGHBORHOODS.forEach((n,idx)=>{
-    if(n.active===false) return;
-    const opt=document.createElement('option');
-    opt.value=n.name;
-    opt.label=n.name+(n.fee>0?' - R$'+n.fee.toFixed(2).replace('.',','):' - Grátis');
-    opt.dataset.index=idx;
-    list.appendChild(opt);
-  });
+
+  if(isIosDevice()){
+    if(text) text.innerHTML='No iPhone/iPad, abra no <b>Safari</b>, toque no botão <b>Compartilhar</b> e escolha <b>Adicionar à Tela de Início</b>.';
+    if(card) card.classList.add('show');
+    return;
+  }
+
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    const btn=document.getElementById('installBtn');
+    if(btn) btn.classList.remove('show');
+    if(card) card.classList.remove('show');
+    return;
+  }
+
+  if(text) text.innerHTML='No Android, abra no <b>Chrome</b>, toque nos <b>3 pontinhos</b> e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. Se não aparecer, aguarde alguns segundos e recarregue a página.';
+  if(card) card.classList.add('show');
 }
 
-function normalizeText(value){
-  return String(value||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-}
+window.addEventListener('appinstalled',()=>{
+  const btn=document.getElementById('installBtn');
+  const card=document.getElementById('installCard');
+  if(btn) btn.classList.remove('show');
+  if(card) card.classList.remove('show');
+});
 
-function onNeighborhoodInput(){
-  const input=document.getElementById('addr-neighborhood-search');
-  const hidden=document.getElementById('addr-neighborhood');
-  const typed=normalizeText(input.value);
-  const idx=NEIGHBORHOODS.findIndex(n=>normalizeText(n.name)===typed&&n.active!==false);
-  hidden.value=idx>=0?idx:'';
-  document.getElementById('delivery-fee').value=idx>=0?(Number(NEIGHBORHOODS[idx].fee)||0):'';
-  updateTotals();
-}
+window.addEventListener('load',()=>{
+  showInstallButton();
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+});
 
-function getSelectedNeighborhoodName(){
-  const idx=document.getElementById('addr-neighborhood')?.value;
-  return idx===''?'':(NEIGHBORHOODS[parseInt(idx,10)]?.name||'');
+async function init(){
+  const {data}=await db.auth.getSession();
+  session=data.session;
+  if(session) await start();
 }
-
-function getSelectedNeighborhoodId(){
-  const idx=document.getElementById('addr-neighborhood')?.value;
-  return idx===''?'':(NEIGHBORHOODS[parseInt(idx,10)]?.id||'');
-}
-
-function isAddressValid(){
-  const customer=document.getElementById('customer-name').value.trim();
-  if(customer==='') return false;
-  const neigh=document.getElementById('addr-neighborhood').value;
-  if(neigh==='') return false;
-  const delivery=parseFloat(document.getElementById('delivery-fee').value)||0;
-  if(delivery===0) return true;
-  const street=document.getElementById('addr-street').value.trim();
-  const number=document.getElementById('addr-number').value.trim();
-  return street!==''&&number!=='';
-}
-
-function updateAddressValidationUI(){
-  const ok=isAddressValid();
-  const err=document.getElementById('addr-error');
-  if(err) err.style.display=ok?'none':'block';
-}
-
-async function initApp(){
-  await Promise.all([loadPrices(),loadNeighborhoods(),loadBeverages(),loadStoreSettings()]);
-  syncSelectedSizes();
-  renderStoreStatus();
-  renderSizePrices();
-  renderList('list-trad',PIZZAS_TRAD,'trad');
-  renderList('list-esp',PIZZAS_ESP,'esp');
-  renderList('list-doce',PIZZAS_DOCE,'doce');
-  renderAllPizzaBuilders();
-  renderBordas();
-  populateNeighborhoods();
-  renderCart();
-  renderSuggestedBebidas();
-  switchTab('tradicionais');
-  updateTotals();
-}
-
-initApp();
+init();
 </script>
 </body>
 </html>
+
+para dar a parte de instalaçao nao falta o json?
+
+Sim. Para aparecer a instalação como app normalmente precisa destes arquivos juntos:
+
+index.html
+
+manifest.webmanifest (o “json” do app)
+
+sw.js (service worker)
+
+ícones (icon-192.png e icon-512.png)
+
+Se subir só o HTML, o navegador trata como site normal e muitas vezes não mostra “Instalar app”.
+
+O pacote ZIP que te mandei já tinha tudo isso:
+Baixar pacote completo
+
+Quando subir no Git/Vercel:
+
+extraia o ZIP;
+
+envie TODOS os arquivos;
+
+deixe o HTML com nome index.html.
+
+Depois:
+
+abra pelo Chrome no Android;
+
+espere alguns segundos;
+
+atualize a página 1x;
+
+deve aparecer “Instalar app” no menu do Chrome ou o botão flutuante.
+
+
+Vou alterar o admin que já está funcionando e preparar também o SQL do Supabase. Como o site cliente você vai mandar depois, vou deixar o admin pronto para mostrar/imprimir tanto pedidos antigos (endereco) quanto os novos campos separados (rua, numero, complemento, referencia).
+
+Pensou por dois segundos
+Feito. Alterei o admin para aceitar endereço separado e continuar mostrando pedidos antigos também.
+
+Rode este SQL no Supabase:
+SQL endereço separado
+
+Suba este pacote no Git/Vercel:
+Pacote admin atualizado
+
+HTML separado:
+Admin endereço separado 
+
+
+
+
+o sql tenho que trocar o antigo por esse?
+
+Não. Esse SQL é só um complemento.
+
+Você mantém o banco atual e executa apenas esse novo SQL por cima.
+
+Ele só adiciona estas colunas novas na tabela orders:
+
+rua
+
+numero_endereco
+
+complemento
+
+referencia
+
+Os pedidos antigos continuam funcionando normalmente.
+
+
+o sw.js e trocar ou acrescenta?
+
+Troca o sw.js antigo pelo novo.
+
+O service worker funciona como “cache do app”, então o ideal é sempre manter:
+
+index.html
+
+manifest.webmanifest
+
+sw.js
+
+todos da mesma versão do pacote.
+
+Então:
+
+apague o sw.js antigo;
+
+coloque o novo do ZIP;
+
+faça git add .
+
+git commit
+
+git push
+
+Depois no celular:
+
+feche o app/site;
+
+abra de novo;
+
+se continuar cache antigo, limpe os dados do site no Chrome ou reinstale o app.
+
+
+
+Texto colado(3).txt
+Documento
+esse eo painel cliente
+
+Recebi o painel/site do cliente. 
+
+
+Agora dá para fazer a integração completa do endereço separado:
+
+rua;
+
+número;
+
+bairro;
+
+complemento;
+
+referência.
+
+Também vou conseguir:
+
+melhorar o layout mobile do cliente;
+
+deixar instalável igual o admin;
+
+integrar melhor com impressão;
+
+adicionar cálculo automático de taxa pelo bairro;
+
+corrigir ticket médio e dashboard usando os novos campos.
+
+O próximo passo é eu alterar esse site cliente já preparado para:
+
+enviar os novos campos ao Supabase;
+
+continuar compatível com pedidos antigos;
+
+melhorar a aparência mobile/PWA.
+
+
+cade o codigo atualizado
+
+Vou gerar agora o arquivo atualizado em cima do código que você mandou, com os campos de endereço separados e mantendo compatibilidade com pedidos antigos.
+
+Pensou por 8s
+Aqui está o código atualizado:
+
+Baixar HTML atualizado
+
+Baixar pacote completo Git/Vercel 
+
+
+
+
+const w=window.open('','_blank','width=360,height=640');
+w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
+}
+
+function renderProducts(category){
+const isBebida=category==='Bebida';
+const list=products.filter(p=>p.category===category);
+$('content').innerHTML= <div class="card"> <div class="section-title"><h2>${isBebida?'Bebidas':'Preços de Pizza'}</h2></div> <div class="form-grid"> <div class="field"><label>Nome</label><input class="input" id="prodName" placeholder="${isBebida?'Refrigerante 2L':'preco_trad_media'}"></div> <div class="field"><label>Preço</label><input class="input" id="prodPrice" type="number" step="0.01" placeholder="0.00"></div> </div> <button class="btn" onclick="addProduct('${category}')">Adicionar</button> </div> <div class="card table-wrap"> <table> <thead><tr><th>Nome</th><th>Preço</th><th>Ativo</th><th>Ações</th></tr></thead> <tbody>${list.map(p=>
+
+
+${p.active===false?'Não':'Sim'}
+
+Salvar
+${p.active===false?'Ativar':'Inativar'}
+
+).join('')}</tbody> </table> </div>;
+}
+
+async function addProduct(category){
+const name=$('prodName').value.trim();
+const price=Number($('prodPrice').value||0);
+if(!name){alert('Digite o nome.');return;}
+const {error}=await db.from('products').insert({name,price,category,active});
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+async function saveProduct(id){
+const name=$('name-'+id).value.trim();
+const price=Number($('price-'+id).value||0);
+const {error}=await db.from('products').update({name,price,updated_at Date().toISOString()}).eq('id',id);
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+async function toggleProduct(id,active){
+const {error}=await db.from('products').update({active}).eq('id',id);
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+function renderBairros(){
+$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Novo bairro</h2></div> <div class="form-grid"> <div class="field"><label>Bairro</label><input class="input" id="bairroName" placeholder="Centro"></div> <div class="field"><label>Taxa</label><input class="input" id="bairroTaxa" type="number" step="0.01" placeholder="5.00"></div> </div> <button class="btn" onclick="addBairro()">Adicionar bairro</button> </div> <div class="card table-wrap"> <table> <thead><tr><th>Bairro</th><th>Taxa</th><th>Ativo</th><th>Ações</th></tr></thead> <tbody>${bairros.map(b=>
+
+
+${b.active===false?'Não':'Sim'}
+
+Salvar
+${b.active===false?'Ativar':'Inativar'}
+
+).join('')}</tbody> </table> </div>;
+}
+
+async function addBairro(){
+const name=$('bairroName').value.trim();
+const taxa=Number($('bairroTaxa').value||0);
+if(!name){alert('Digite o bairro.');return;}
+const {error}=await db.from('bairros').insert({name,taxa,active});
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+async function saveBairro(id){
+const name=$('bname-'+id).value.trim();
+const taxa=Number($('btaxa-'+id).value||0);
+const {error}=await db.from('bairros').update({name,taxa,updated_at Date().toISOString()}).eq('id',id);
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+async function toggleBairro(id,active){
+const {error}=await db.from('bairros').update({active}).eq('id',id);
+if(error){alert('Erro: '+error.message);return;}
+await loadAll();
+}
+
+function renderFuncionamento(){
+const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+const closed=(settings.closed_days||[]).map(Number);
+$('content').innerHTML= <div class="card"> <div class="section-title"><h2>Status da loja</h2></div> <div class="notice">Status atual: <b>${settings.manual_closed?'Fechada manualmente':'Aberta'}</b></div> <button class="btn ${settings.manual_closed?'green':'red'}" onclick="toggleStore()">${settings.manual_closed?'Abrir loja agora':'Fechar loja agora'}</button> </div> <div class="card"> <div class="section-title"><h2>Dias sem funcionamento</h2></div> <div class="form-grid"> ${days.map((d,i)=><input type="checkbox" value="${i}" ${closed.includes(i)?'checked':''} onchange="saveClosedDays()"> ${d}).join('')} </div> </div>;
+}
+
+async function saveSettings(){
+const {error}=await db.from('store_settings').upsert({key:'status',value,updated_at Date().toISOString()},{onConflict:'key'});
+if(error){alert('Erro: '+error.message);return;}
+}
+
+async function toggleStore(){
+settings.manual_closed=!settings.manual_closed;
+await saveSettings();
+renderFuncionamento();
+}
+
+async function saveClosedDays(){
+settings.closed_days=[...document.querySelectorAll('input[type=checkbox]')].map(i=>Number(i.value));
+await saveSettings();
+}
+
+async function init(){
+const {data}=await db.auth.getSession();
+session=data.session;
+if(session) await start();
+}
+init();
+
+
+
+Fechar
